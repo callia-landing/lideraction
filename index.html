@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Google Fonts: Raleway -->
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;700;900&display=swap" rel="stylesheet" />
+
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a2e0ef8f3c.js" crossorigin="anonymous"></script>
+
+    <title>Lider Action</title>
+
+    <style>
+        :root {
+            --color-primary: #6a11cb;
+            --color-secondary: #2575fc;
+            --gradient: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            --text-light: #ffffff;
+            --text-dark: #1c1c1c;
+            --card-bg: #292949;
+            --section-dark: #121224;
+            --section-mid: #1e1e2f;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            background: #0f0f1a;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 { font-weight: 700; }
+
+        a { color: inherit; }
+
+        .boton-formulario {
+            margin-top: 2rem;
+            display: inline-block;
+            background: var(--gradient);
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s ease;
+        }
+        .boton-formulario:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+        section { padding: 4rem 2rem; }
+
+        /* ===== GANCHO ===== */
+        .gancho {
+            background: var(--gradient);
+            text-align: center;
+            padding: 6rem 2rem;
+        }
+        .gancho h1 { font-size: 4rem; margin-bottom: 1rem; }
+        .gancho h2 { font-size: 1.9rem; max-width: 1100px; margin: 0 auto; }
+
+        /* ===== PASOS ===== */
+        .pasos { display: flex; flex-wrap: wrap; justify-content: space-around; text-align: center; background-color: var(--section-mid); }
+        .pasos img { width: 50px; }
+        .pasos div { flex: 1 1 300px; padding: 2rem; margin: 1rem; background: var(--card-bg); border-radius: 15px; transition: transform 0.3s ease; }
+        .pasos div:hover { transform: translateY(-5px); }
+
+        /* ===== INSTALACIONES / QUIÉNES SOMOS ===== */
+        .instalaciones { display: flex; flex-wrap: wrap; gap: 2rem; align-items: center; background-color: var(--section-dark); }
+        .imagen-instalaciones img { width: 100%; max-width: 500px; border-radius: 20px; }
+        .texto-instalaciones { flex: 1; font-size: 1.1rem; display: grid; gap: 1rem; }
+        .texto-instalaciones p { opacity: 0.95; }
+
+        /* ===== SLIDER PRENDAS (CLIENTES) ===== */
+        .sliderprendas { background-color: #1c1c2e; padding: 4rem 0; overflow: hidden; position: relative; }
+        .marquee { width: 100%; overflow: hidden; position: relative; }
+        .marquee-content { display: flex; gap: 2rem; width: max-content; animation: scroll-left 30s linear infinite; }
+        @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .prenda { min-width: 180px; flex-shrink: 0; background: var(--card-bg); padding: 1rem; border-radius: 10px; text-align: center; transition: transform 0.3s; }
+        .prenda img { width: 100%; max-width: 150px; margin-bottom: 1rem; }
+        .prenda h3 { font-size: 1rem; margin-top: 0.5rem; color: white; }
+        .prenda:hover { transform: scale(1.05); }
+
+        /* ===== SERVICIOS (antes .maquinas) ===== */
+        .maquinas { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; background: var(--section-dark); }
+        .maquinas__titulo { grid-column: 1 / -1; text-align: center; margin-bottom: 1rem; font-size: 2.2rem; }
+        .maquina { background: var(--card-bg); border-radius: 15px; padding: 1.25rem; text-align: left; display: grid; gap: 0.75rem; }
+        .maquina h2 { display: flex; align-items: center; gap: 0.6rem; font-size: 1.3rem; }
+        .maquina-img img { width: 100%; height: auto; margin-bottom: 0.75rem; border-radius: 10px; }
+        .maquina p { opacity: 0.95; }
+
+        /* ===== FORMULARIO DINÁMICO ===== */
+        .formulario-dinamico { background: #0f1022; }
+        .formulariocompleto { max-width: 720px; margin: 0 auto; text-align: center; }
+        .form-step { display: none; margin-bottom: 2rem; animation: fadeIn 0.6s ease-in-out; }
+        .step-active { display: block; }
+        .form-step h4 { font-size: 1.6rem; margin-bottom: 1.2rem; }
+
+        .campo-texto { display: grid; gap: 0.5rem; justify-items: start; margin: 0 auto; max-width: 540px; }
+        .campo-texto label { font-weight: 700; }
+        .campo-texto input[type="text"],
+        .campo-texto input[type="tel"] {
+            width: 100%;
+            background: #141433;
+            color: white;
+            border: 1px solid #ffffff22;
+            padding: 0.9rem 1rem;
+            border-radius: 12px;
+            outline: none;
+        }
+        .campo-texto small { opacity: 0.8; }
+
+        .opciones-productos, .pregunta2-options, .cantidad-options, .grupo-opciones {
+            display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+        }
+
+        .chip-opcion { background: #ffffff10; color: white; border: 1px solid #ffffff20; padding: 0.9rem 1.1rem; border-radius: 999px; cursor: pointer; transition: transform .2s, background .2s, border .2s; font-weight: 700; }
+        .chip-opcion[aria-pressed="true"] { background: #ffffff26; border-color: var(--color-secondary); transform: translateY(-1px); }
+
+        .boton-siguiente { margin-top: 1.5rem; background: var(--gradient); color: white; border: 0; padding: 0.8rem 1.5rem; border-radius: 999px; font-weight: 800; cursor: pointer; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ===== CALENDLY / REVIEWS ===== */
+        .calendly, .reviews { background-color: var(--section-mid); padding: 4rem 2rem; min-height: 200px; text-align: center; }
+        .calendly { background: var(--gradient); color: white; padding: 4rem 1rem; }
+        .calendly h2, .calendly p { margin-bottom: 1.5rem; text-align: center; }
+        .calendly-inline-widget { margin: 0 auto; max-width: 100%; border-radius: 20px; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.3); }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .instalaciones { flex-direction: column; }
+            .gancho h1 { font-size: 3rem; }
+        }
+        @media (max-width: 768px) { .calendly-inline-widget { height: 900px !important; } }
+    </style>
+</head>
+<body>
+    <!-- ===== GANCHO ===== -->
+    <section class="gancho">
+        <h1>Lider Action</h1>
+        <h2>Los líderes digitales de Ayer con las metodologías de Ahora</h2>
+        <a href="#formulario" class="boton-formulario">
+            <i class="fa-solid fa-pencil"></i> Empieza tu proyecto
+        </a>
+    </section>
+
+    <!-- ===== PASOS ===== -->
+    <section class="pasos">
+        <div class="paso1">
+            <h3>Rellenas el formulario</h3>
+            <img src="https://i.postimg.cc/XN26b86N/rellenar.png" alt="Rellenar formulario" />
+        </div>
+        <div class="paso2">
+            <h3>Nos ponemos en contacto contigo y aterrizamos tu proyecto</h3>
+            <img src="https://i.postimg.cc/mrTmkv7v/dialogamos.png" alt="Contacto" />
+        </div>
+        <div class="paso3">
+            <h3>Realizaremos una videollamada donde te diremos exactamente la estrategia para levantar tu proyecto, qué garantías, qué objetivos y de qué forma.</h3>
+            <img src="https://i.postimg.cc/Sxfwg7dp/produccion.png" alt="Videollamada estrategia" />
+        </div>
+    </section>
+
+    <!-- ===== QUIÉNES SOMOS ===== -->
+    <section class="instalaciones">
+        <div class="imagen-instalaciones">
+            <img src="https://i.postimg.cc/T3ttykQh/Whats-App-Image-2025-07-29-at-11-06-44-1.jpg" alt="Equipo Lider Action" />
+        </div>
+        <div class="texto-instalaciones">
+            <h2><i class="fas fa-industry"></i> Stumarketing - iPartners &gt; Ahora Lider Action</h2>
+            <p><strong>2 Consultoras en Madrid</strong> fusionadas cogiendo lo mejor de ambas ERAS.</p>
+            <p><strong>Stumarketing:</strong> profesionales que hablan tu mismo lenguaje y entienden tus mismas dudas; trabajan de una manera tradicional pero con miras al futuro.</p>
+            <p><strong>iPartners:</strong> consultora tecnológica con procesos nuevos de rápido crecimiento, ofreciendo un resultado claro y un proceso bien comunicado.</p>
+            <a href="#formulario" class="boton-formulario"><i class="fas fa-handshake"></i> Quiero trabajar con Lider Action</a>
+        </div>
+    </section>
+
+    <!-- ===== CLIENTES (antes PRENDAS) ===== -->
+    <section class="sliderprendas">
+        <h2 style="text-align:center; margin-bottom: 2rem;"><i class="fas fa-user-tie"></i> Algunos de nuestros Clientes</h2>
+        <div class="marquee">
+            <div class="marquee-content">
+                <!-- Logos / placeholders -->
+                <div class="prenda">
+                    <img src="https://i.postimg.cc/dtNfCyk6/clothes.png" alt="Cliente 1" />
+                    <h3>Cliente 1</h3>
+                </div>
+                <div class="prenda">
+                    <img src="https://i.postimg.cc/dtNfCyk6/clothes.png" alt="Cliente 2" />
+                    <h3>Cliente 2</h3>
+                </div>
+                <div class="prenda">
+                    <img src="https://i.postimg.cc/dtNfCyk6/clothes.png" alt="Cliente 3" />
+                    <h3>Cliente 3</h3>
+                </div>
+                <div class="prenda">
+                    <img src="https://i.postimg.cc/dtNfCyk6/clothes.png" alt="Cliente 4" />
+                    <h3>Cliente 4</h3>
+                </div>
+                <!-- duplicación para bucle -->
+                <div class="prenda">
+                    <img src="https://i.postimg.cc/dtNfCyk6/clothes.png" alt="Cliente 5" />
+                    <h3>Cliente 5</h3>
+                </div>
+                <div class="prenda">
+                    <img src="https://i.postimg.cc/dtNfCyk6/clothes.png" alt="Cliente 6" />
+                    <h3>Cliente 6</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SERVICIOS ===== -->
+    <section class="maquinas">
+        <h1 class="maquinas__titulo">Nuestros Servicios</h1>
+
+        <div class="maquina">
+            <div class="maquina-img">
+                <img src="https://i.postimg.cc/QCrYJ2cJ/Whats-App-Image-2025-08-01-at-11-18-43.jpg" alt="Embudo Digital" />
+            </div>
+            <div class="maquina-description">
+                <h2><i class="fa-solid fa-filter-circle-dollar"></i> Embudo Digital</h2>
+                <p>Campañas de marketing efectivas que seguro que no has realizado; parten de una previa investigación para que funcionen. Campañas en redes sociales con diferentes tipos de embudos mencionados más adelante.</p>
+            </div>
+        </div>
+
+        <div class="maquina">
+            <div class="maquina-img">
+                <img src="https://i.postimg.cc/W4wd4rXp/Whats-App-Image-2025-08-01-at-11-18-44.jpg" alt="Call IA" />
+            </div>
+            <div class="maquina-description">
+                <h2><i class="fa-solid fa-phone-volume"></i> Call IA</h2>
+                <p>Campañas de llamadas con inteligencia artificial a bases de datos. Podemos usar tu histórico o adquirir bases con nuestros sistemas de <em>scraping</em> o por embudos.</p>
+            </div>
+        </div>
+
+        <div class="maquina">
+            <div class="maquina-img">
+                <img src="https://i.postimg.cc/3rmxr2Rs/Whats-App-Image-2025-08-01-at-11-18-52.jpg" alt="Whatsapp IA" />
+            </div>
+            <div class="maquina-description">
+                <h2><i class="fa-brands fa-whatsapp"></i> Whatsapp IA</h2>
+                <p>Embudo de inteligencia artificial por Whatsapp que cualifica, informa y agenda en Google Calendar.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FORMULARIO ===== -->
+    <section class="formulario-dinamico" id="formulario">
+        <div class="formulariocompleto">
+
+            <!-- Paso 1: Tipo de empresa -->
+            <div class="form-step step-active" id="step-1">
+                <h4><i class="fas fa-building"></i> Tipo de Empresa que posee</h4>
+                <div class="campo-texto">
+                    <label for="tipo-empresa">Describe tu empresa</label>
+                    <input id="tipo-empresa" type="text" placeholder="Ej: Agencia inmobiliaria, eCommerce moda, B2B software..." />
+                </div>
+                <button class="boton-siguiente" data-next="step-2">Continuar</button>
+            </div>
+
+            <!-- Paso 2: Servicio de interés -->
+            <div class="form-step" id="step-2">
+                <h4><i class="fas fa-concierge-bell"></i> Servicio que más le interesa</h4>
+                <div class="grupo-opciones" data-name="servicio">
+                    <button class="chip-opcion" type="button">Nuevos Clientes Potenciales con Campañas Publicitarias</button>
+                    <button class="chip-opcion" type="button">Nuevos clientes Potenciales con Llamadas de Inteligencia Artificial</button>
+                    <button class="chip-opcion" type="button">Inteligencia Artificial en Whatsapp</button>
+                </div>
+                <button class="boton-siguiente" data-next="step-3">Continuar</button>
+            </div>
+
+            <!-- Paso 3: Qué desea mejorar -->
+            <div class="form-step" id="step-3">
+                <h4><i class="fas fa-arrow-trend-up"></i> ¿Qué desea mejorar de su empresa?</h4>
+                <div class="grupo-opciones" data-name="mejoras">
+                    <button class="chip-opcion" type="button">Multiplicación de facturación</button>
+                    <button class="chip-opcion" type="button">Sistema de publicidad y comercial estructurados</button>
+                    <button class="chip-opcion" type="button">Escalabilidad y Estrategia de mi proyecto</button>
+                </div>
+                <button class="boton-siguiente" data-next="step-4">Continuar</button>
+            </div>
+
+            <!-- Paso 4: Nombre -->
+            <div class="form-step" id="step-4">
+                <h4><i class="fas fa-user"></i> Nombre</h4>
+                <div class="campo-texto">
+                    <label for="nombre">Tu nombre</label>
+                    <input id="nombre" type="text" placeholder="Nombre y apellidos" />
+                </div>
+                <button class="boton-siguiente" data-next="step-5">Continuar</button>
+            </div>
+
+            <!-- Paso 5: Teléfono -->
+            <div class="form-step" id="step-5">
+                <h4><i class="fas fa-phone"></i> Teléfono</h4>
+                <div class="campo-texto">
+                    <label for="telefono">Tu teléfono</label>
+                    <input id="telefono" name="telefono" type="tel" inputmode="tel" placeholder="Ej: +34 612 345 678" pattern="^\+?[0-9\s\-()]{7,}$" />
+                    <small>Formato recomendado: +34 612 345 678</small>
+                </div>
+                <button class="boton-siguiente" id="enviar-formulario">Enviar</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CALENDLY ===== -->
+    <section class="calendly">
+        <h2><i class="fas fa-calendar-alt"></i> Reserva una reunión</h2>
+        <p>Agenda una llamada con nuestro equipo para empezar a crecer.</p>
+        <div class="calendly-inline-widget" data-url="https://calendly.com/wonder-technology/wonder" style="min-width:320px;height:700px;"></div>
+        <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+    </section>
+
+    <!-- ===== REVIEWS ===== -->
+    <section class="reviews">
+        <h2><i class="fas fa-star"></i> Lo que dicen nuestros clientes</h2>
+        <p>Testimonios próximamente...</p>
+    </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const steps = document.querySelectorAll(".form-step");
+            const nextButtons = document.querySelectorAll(".boton-siguiente");
+
+            function showStep(stepId) {
+                steps.forEach(step => step.classList.remove("step-active"));
+                document.getElementById(stepId).classList.add("step-active");
+            }
+
+            nextButtons.forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    const next = btn.dataset.next;
+                    if (next) showStep(next);
+                });
+            });
+
+            // Toggle chips (permitir selección múltiple)
+            document.querySelectorAll('.grupo-opciones').forEach(grupo => {
+                grupo.addEventListener('click', (e) => {
+                    const target = e.target.closest('.chip-opcion');
+                    if (!target) return;
+                    const pressed = target.getAttribute('aria-pressed') === 'true';
+                    target.setAttribute('aria-pressed', String(!pressed));
+                });
+            });
+
+            // Envío simulado
+            document.getElementById('enviar-formulario').addEventListener('click', () => {
+                const payload = {
+                    empresa: document.getElementById('tipo-empresa').value.trim(),
+                    servicios: Array.from(document.querySelectorAll('#step-2 .chip-opcion[aria-pressed="true"]')).map(b=>b.textContent.trim()),
+                    mejoras: Array.from(document.querySelectorAll('#step-3 .chip-opcion[aria-pressed="true"]')).map(b=>b.textContent.trim()),
+                    nombre: document.getElementById('nombre').value.trim(),
+                    telefono: document.getElementById('telefono').value.trim(),
+                };
+
+                // Validaciones mínimas
+                if (!payload.empresa || !payload.nombre || !payload.telefono) {
+                    alert('Por favor completa empresa, nombre y teléfono.');
+                    return;
+                }
+                if (!/^\+?[0-9\s\-()]{7,}$/.test(payload.telefono)) {
+                    alert('Introduce un teléfono válido.');
+                    return;
+                }
+
+                alert('Gracias, recibimos tu solicitud. Pronto nos pondremos en contacto.');
+                // Aquí podrías enviar "payload" a tu backend con fetch()
+                // fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+            });
+
+            // Inicia en el paso 1
+            showStep("step-1");
+        });
+    </script>
+</body>
+</html>
