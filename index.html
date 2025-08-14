@@ -135,7 +135,35 @@
             .gancho h1 { font-size: 3rem; }
         }
         @media (max-width: 768px) { .calendly-inline-widget { height: 900px !important; } }
-    </style>
+    
+        /* ===== ROI CALCULATOR ===== */
+        .roi { background: var(--section-mid); padding: 4rem 2rem; }
+        .roi__inner { max-width: 980px; margin: 0 auto; }
+        .roi h1 { font-size: 2.2rem; text-align: center; margin-bottom: .5rem; }
+        .roi h2 { text-align: center; margin-bottom: 2rem; opacity: .9; }
+        .roi-form { display: grid; gap: 1rem; grid-template-columns: repeat(3, 1fr); }
+        .roi-form__group { display: grid; gap: .5rem; }
+        .roi-form__group input { background: #141433; color: white; border: 1px solid #ffffff22; padding: .9rem 1rem; border-radius: 12px; outline: none; }
+        .roi-form__start { justify-self: center; grid-column: 1 / -1; }
+        @media (max-width: 900px){ .roi-form { grid-template-columns: 1fr; } }
+
+        .roi__loader { display: none; text-align: center; padding: 2rem 1rem; }
+        .roi__loader.active { display: block; }
+        .roi__spinner { width: 40px; height: 40px; border-radius: 50%; border: 3px solid #ffffff33; border-top-color: #ffffff; margin: 0 auto 1rem; animation: spin 1s linear infinite; }
+        .roi__dots::after { content: ''; animation: dots 1.2s steps(3, end) infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes dots { 0%{content:' '} 33%{content:'.'} 66%{content:'..'} 100%{content:'...'} }
+
+        .roi__result.hidden { display: none; }
+        .roi__controls { margin: 1rem 0 1.5rem; display: grid; gap: .5rem; }
+        .roi__controls input[type=range] { width: 100%; }
+        .roi-table-wrap { overflow-x: auto; }
+        .roi-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 12px; overflow: hidden; }
+        .roi-table th, .roi-table td { padding: .9rem 1rem; text-align: left; border-bottom: 1px solid #ffffff1a; }
+        .roi-table th { white-space: nowrap; opacity: .9; }
+        .roi__note { margin-top: .75rem; opacity: .8; font-size: .95rem; }
+
+</style>
 </head>
 <body>
     <!-- ===== GANCHO ===== -->
@@ -243,6 +271,75 @@
             <div class="maquina-description">
                 <h2><i class="fa-brands fa-whatsapp"></i> Whatsapp IA</h2>
                 <p>Embudo de inteligencia artificial por Whatsapp que cualifica, informa y agenda en Google Calendar.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ROI CALCULATOR SECTION ===== -->
+    <section class="roi" id="roi">
+        <div class="roi__inner">
+            <h1>Calcula tu Retorno de la Inversión</h1>
+            <h2>Según tu sector y negocio</h2>
+
+            <form class="roi-form" id="roi-form">
+                <div class="roi-form__group">
+                    <label for="roi-sector">Escribe tu Sector</label>
+                    <input type="text" id="roi-sector" placeholder="Ej: Inmobiliaria" />
+                </div>
+                <div class="roi-form__group">
+                    <label for="roi-servicio">Escribe tu Servicio</label>
+                    <input type="text" id="roi-servicio" placeholder="Ej: Captación de vendedores" />
+                </div>
+                <div class="roi-form__group">
+                    <label for="roi-ticket">Escribe tu Ticket Medio de Servicio</label>
+                    <input type="text" id="roi-ticket" placeholder="Ej: 5000€" />
+                </div>
+                <button type="submit" class="boton-formulario roi-form__start">Comenzar</button>
+            </form>
+
+            <div class="roi__loader" id="roi-loader" aria-hidden="true">
+                <div class="roi__spinner"></div>
+                <p>process<span class="roi__dots">...</span></p>
+            </div>
+
+            <div class="roi__result hidden" id="roi-result">
+                <div class="roi__controls">
+                    <label for="roi-inversion">Inversión Publicitaria: <strong id="roi-inversion-label">0€</strong></label>
+                    <input type="range" id="roi-inversion" min="0" max="5000" step="50" value="0" />
+                </div>
+
+                <div class="roi-table-wrap">
+                    <table class="roi-table">
+                        <tbody>
+                            <tr>
+                                <th>Inversión Publicitaria</th>
+                                <td id="roi-cell-inversion">0€</td>
+                            </tr>
+                            <tr>
+                                <th>Cantidad de Leads</th>
+                                <td id="roi-cell-leads">0</td>
+                            </tr>
+                            <tr>
+                                <th>Coste por Cliente Potencial (CPL)</th>
+                                <td id="roi-cell-cpl">-</td>
+                            </tr>
+                            <tr>
+                                <th>CTR conversión</th>
+                                <td id="roi-cell-ctr">-</td>
+                            </tr>
+                            <tr>
+                                <th>Ticket Medio</th>
+                                <td id="roi-cell-ticket">-</td>
+                            </tr>
+                            <tr>
+                                <th>Facturación (estimada)</th>
+                                <td id="roi-cell-rev">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="roi__note">Los valores son estimaciones orientativas. Ajusta el deslizador para simular diferentes inversiones.</p>
             </div>
         </div>
     </section>
@@ -374,6 +471,94 @@
 
             // Inicia en el paso 1
             showStep("step-1");
+
+            // ===== ROI Calculator =====
+            const roiForm = document.getElementById('roi-form');
+            const roiLoader = document.getElementById('roi-loader');
+            const roiResult = document.getElementById('roi-result');
+            const slider = document.getElementById('roi-inversion');
+            const labelInv = document.getElementById('roi-inversion-label');
+            const cInversion = document.getElementById('roi-cell-inversion');
+            const cLeads = document.getElementById('roi-cell-leads');
+            const cCpl = document.getElementById('roi-cell-cpl');
+            const cCtr = document.getElementById('roi-cell-ctr');
+            const cTicket = document.getElementById('roi-cell-ticket');
+            const cRev = document.getElementById('roi-cell-rev');
+
+            const SECTOR_CONFIG = {
+                'inmobiliaria': { cpl: 7, conv: [0.01, 0.10], factor: 1.9 },
+            };
+            const DEFAULT_CONFIG = { cpl: 12, conv: [0.02, 0.08], factor: 1.8 };
+            let CURRENT = { cfg: DEFAULT_CONFIG, ticket: 0 };
+
+            function parseMoney(val){
+                if(!val) return 0;
+                const num = (val+'').replace(/[^0-9.,]/g,'').replace(/,([0-9]{2})$/,'.$1').replace(/,/g,'');
+                const n = parseFloat(num);
+                return isNaN(n) ? 0 : n;
+            }
+            function fmtEUR(n){ return Number(n).toLocaleString('es-ES', { style:'currency', currency:'EUR', maximumFractionDigits:0 }); }
+            function fmtPct(n){ return (n*100).toFixed(0) + '%'; }
+
+            function refresh(inv){
+                const cfg = CURRENT.cfg;
+                const cpl = cfg.cpl;
+                const factor = cfg.factor;
+                const leadsLow = Math.max(0, Math.floor(inv / (cpl*factor)));
+                const leadsHigh = Math.max(0, Math.floor(inv / cpl));
+                const ctrLow = cfg.conv[0], ctrHigh = cfg.conv[1];
+                const ticket = CURRENT.ticket;
+
+                const invText = fmtEUR(inv);
+                labelInv.textContent = invText;
+                cInversion.textContent = invText;
+                cCpl.textContent = fmtEUR(cpl);
+                cCtr.textContent = `${fmtPct(ctrLow)} – ${fmtPct(ctrHigh)}`;
+                cTicket.textContent = ticket ? fmtEUR(ticket) : '-';
+
+                if(inv <= 0){ cLeads.textContent = '0'; cRev.textContent = ticket ? '0' : '-'; return; }
+                cLeads.textContent = `${leadsLow} – ${leadsHigh} Leads`;
+
+                if(ticket){
+                    const revenueLow = leadsLow * ctrLow * ticket;
+                    const revenueHigh = leadsHigh * ctrHigh * ticket;
+                    cRev.textContent = `${fmtEUR(revenueLow)} – ${fmtEUR(revenueHigh)}`;
+                } else {
+                    cRev.textContent = '-';
+                }
+            }
+
+            if(roiForm){
+                roiForm.addEventListener('submit', (e)=>{
+                    e.preventDefault();
+                    const sector = document.getElementById('roi-sector').value.trim().toLowerCase();
+                    const servicio = document.getElementById('roi-servicio').value.trim();
+                    const ticketStr = document.getElementById('roi-ticket').value.trim();
+                    const ticket = parseMoney(ticketStr);
+
+                    CURRENT.cfg = SECTOR_CONFIG[sector] || DEFAULT_CONFIG;
+                    CURRENT.ticket = ticket;
+
+                    // Prefill
+                    refresh(0);
+
+                    // loader → resultados
+                    roiLoader.classList.add('active');
+                    roiResult.classList.add('hidden');
+                    setTimeout(()=>{
+                        roiLoader.classList.remove('active');
+                        roiResult.classList.remove('hidden');
+                    }, 1200);
+                });
+
+                slider.addEventListener('input', (e)=>{
+                    const inv = parseInt(e.target.value,10) || 0;
+                    refresh(inv);
+                });
+
+                // init
+                refresh(parseInt(slider?.value || 0, 10));
+            }
         });
     </script>
 </body>
