@@ -710,31 +710,3 @@
                     const servicio = document.getElementById('roi-servicio').value.trim();
                     const ticketStr = document.getElementById('roi-ticket').value.trim();
                     const ticket = parseMoney(ticketStr);
-                    CURRENT.cfg = SECTOR_CONFIG[sector] || DEFAULT_CONFIG;
-                    CURRENT.ticket = ticket;
-
-                    // Prefill con inversión 0
-                    refresh(0);
-
-                    // Loader → resultados
-                    roiLoader.classList.add('active');
-                    roiResult.classList.add('hidden');
-                    setTimeout(() => {
-                        roiLoader.classList.remove('active');
-                        roiResult.classList.remove('hidden');
-                    }, 1200);
-                });
-
-                // Actualiza resultados al mover el rango
-                slider.addEventListener('input', (e) => {
-                    const inv = parseInt(e.target.value, 10) || 0;
-                    refresh(inv);
-                });
-
-                // Estado inicial
-                refresh(parseInt(slider.value, 10) || 0);
-            }
-        });
-</script>
- </body> 
-</html>
