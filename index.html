@@ -73,7 +73,7 @@
         .texto-instalaciones { flex: 1; font-size: 1.1rem; display: grid; gap: 1rem; }
         .texto-instalaciones p { opacity: 0.95; }
 
-        /* ===== SLIDER PRENDAS (CLIENTES) ===== */
+        /* ===== CLIENTES (slider) ===== */
         .sliderprendas { background-color: #1c1c2e; padding: 4rem 0; overflow: hidden; position: relative; }
         .marquee { width: 100%; overflow: hidden; position: relative; }
         .marquee-content { display: flex; gap: 2rem; width: max-content; animation: scroll-left 30s linear infinite; }
@@ -83,7 +83,7 @@
         .prenda h3 { font-size: 1rem; margin-top: 0.5rem; color: white; }
         .prenda:hover { transform: scale(1.05); }
 
-        /* ===== SERVICIOS (antes .maquinas) ===== */
+        /* ===== SERVICIOS ===== */
         .maquinas { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; background: var(--section-dark); }
         .maquinas__titulo { grid-column: 1 / -1; text-align: center; margin-bottom: 1rem; font-size: 2.2rem; }
         .maquina { background: var(--card-bg); border-radius: 15px; padding: 1.25rem; text-align: left; display: grid; gap: 0.75rem; }
@@ -91,51 +91,6 @@
         .maquina-img img { width: 100%; height: auto; margin-bottom: 0.75rem; border-radius: 10px; }
         .maquina p { opacity: 0.95; }
 
-        /* ===== FORMULARIO DINÁMICO ===== */
-        .formulario-dinamico { background: #0f1022; }
-        .formulariocompleto { max-width: 720px; margin: 0 auto; text-align: center; }
-        .form-step { display: none; margin-bottom: 2rem; animation: fadeIn 0.6s ease-in-out; }
-        .step-active { display: block; }
-        .form-step h4 { font-size: 1.6rem; margin-bottom: 1.2rem; }
-
-        .campo-texto { display: grid; gap: 0.5rem; justify-items: start; margin: 0 auto; max-width: 540px; }
-        .campo-texto label { font-weight: 700; }
-        .campo-texto input[type="text"],
-        .campo-texto input[type="tel"] {
-            width: 100%;
-            background: #141433;
-            color: white;
-            border: 1px solid #ffffff22;
-            padding: 0.9rem 1rem;
-            border-radius: 12px;
-            outline: none;
-        }
-        .campo-texto small { opacity: 0.8; }
-
-        .opciones-productos, .pregunta2-options, .cantidad-options, .grupo-opciones {
-            display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
-        }
-
-        .chip-opcion { background: #ffffff10; color: white; border: 1px solid #ffffff20; padding: 0.9rem 1.1rem; border-radius: 999px; cursor: pointer; transition: transform .2s, background .2s, border .2s; font-weight: 700; }
-        .chip-opcion[aria-pressed="true"] { background: #ffffff26; border-color: var(--color-secondary); transform: translateY(-1px); }
-
-        .boton-siguiente { margin-top: 1.5rem; background: var(--gradient); color: white; border: 0; padding: 0.8rem 1.5rem; border-radius: 999px; font-weight: 800; cursor: pointer; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* ===== CALENDLY / REVIEWS ===== */
-        .calendly, .reviews { background-color: var(--section-mid); padding: 4rem 2rem; min-height: 200px; text-align: center; }
-        .calendly { background: var(--gradient); color: white; padding: 4rem 1rem; }
-        .calendly h2, .calendly p { margin-bottom: 1.5rem; text-align: center; }
-        .calendly-inline-widget { margin: 0 auto; max-width: 100%; border-radius: 20px; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.3); }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            .instalaciones { flex-direction: column; }
-            .gancho h1 { font-size: 3rem; }
-        }
-        @media (max-width: 768px) { .calendly-inline-widget { height: 900px !important; } }
-    
         /* ===== ROI CALCULATOR ===== */
         .roi { background: var(--section-mid); padding: 4rem 2rem; }
         .roi__inner { max-width: 980px; margin: 0 auto; }
@@ -163,43 +118,54 @@
         .roi-table th { white-space: nowrap; opacity: .9; }
         .roi__note { margin-top: .75rem; opacity: .8; font-size: .95rem; }
 
+        /* ===== FORMULARIO DINÁMICO ===== */
+        .formulario-dinamico { background: #0f1022; }
+        .formulariocompleto { max-width: 720px; margin: 0 auto; text-align: center; }
+        .form-step { display: none; margin-bottom: 2rem; animation: fadeIn 0.6s ease-in-out; }
+        .step-active { display: block; }
+        .form-step h4 { font-size: 1.6rem; margin-bottom: 1.2rem; }
 
-        /* ===== CASOS DE ÉXITO (Miro-like canvas) ===== */
-        .casosdeexito { background: #0d0f1f; padding: 4rem 2rem; }
-        .ce__inner { max-width: 1200px; margin: 0 auto; display: grid; gap: 1rem; }
-        .ce__head { text-align: center; }
-        .ce__head h1 { font-size: 2.2rem; }
-        .ce__head h2 { opacity: .9; margin-top: .25rem; }
-        .ce__toolbar { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: space-between; align-items: center; background: #111433; border: 1px solid #ffffff15; border-radius: 14px; padding: .6rem .8rem; }
-        .ce__filters { display: flex; gap: .5rem; flex-wrap: wrap; }
-        .ce__btn { background: #ffffff10; color: #fff; border: 1px solid #ffffff20; padding: .6rem .9rem; border-radius: 999px; cursor: pointer; font-weight: 800; }
-        .ce__btn[aria-pressed="true"]{ background: #ffffff25; border-color: var(--color-secondary); }
-        .ce__zoom { display: flex; gap: .4rem; }
-        .ce__zoom button { width: 38px; height: 38px; border-radius: 10px; border: 1px solid #ffffff22; background: #191b34; color: #fff; font-weight: 900; cursor: pointer; }
+        .campo-texto { display: grid; gap: 0.5rem; justify-items: start; margin: 0 auto; max-width: 540px; }
+        .campo-texto label { font-weight: 700; }
+        .campo-texto input[type="text"],
+        .campo-texto input[type="tel"] {
+            width: 100%;
+            background: #141433;
+            color: white;
+            border: 1px solid #ffffff22;
+            padding: 0.9rem 1rem;
+            border-radius: 12px;
+            outline: none;
+        }
+        .campo-texto small { opacity: 0.8; }
 
-        .ce__board { position: relative; overflow: hidden; border-radius: 16px; border: 1px dashed #3a3e78; background: radial-gradient(ellipse at top, #121434, #0d0f1f 60%); min-height: 520px; }
-        .ce__canvas { position: relative; width: 2000px; height: 1200px; transform-origin: 0 0; transition: transform .15s ease-out; background-image: linear-gradient(transparent 31px, #ffffff0e 32px), linear-gradient(90deg, transparent 31px, #ffffff0e 32px); background-size: 32px 32px; }
-        .ce__panlayer { position: absolute; inset: 0; cursor: grab; }
-        .ce__panlayer:active { cursor: grabbing; }
+        .grupo-opciones {
+            display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+        }
+        .chip-opcion {
+            background: #ffffff10; color: white; border: 1px solid #ffffff20;
+            padding: 0.9rem 1.1rem; border-radius: 999px; cursor: pointer;
+            transition: transform .2s, background .2s, border .2s; font-weight: 700;
+        }
+        .chip-opcion[aria-pressed="true"] { background: #ffffff26; border-color: var(--color-secondary); transform: translateY(-1px); }
 
-        .ce-node { position: absolute; width: 260px; background: #171a3b; border: 1px solid #ffffff2a; border-radius: 16px; box-shadow: 0 10px 30px #00000040; padding: 1rem; display: grid; gap: .4rem; }
-        .ce-node h3 { font-size: 1.05rem; display: flex; align-items: center; gap: .5rem; }
-        .ce-tag { display: inline-block; font-size: .75rem; padding: .25rem .6rem; border-radius: 999px; border: 1px solid #ffffff22; background: #ffffff14; }
-        .ce-node--clickable { transition: transform .15s; }
-        .ce-node--clickable:hover { transform: translateY(-2px); }
-        .ce-node.active { outline: 2px solid var(--color-secondary); }
+        .boton-siguiente { margin-top: 1.5rem; background: var(--gradient); color: white; border: 0; padding: 0.8rem 1.5rem; border-radius: 999px; font-weight: 800; cursor: pointer; }
 
-        .ce__panel { background: #111433; border: 1px solid #ffffff18; border-radius: 14px; padding: 1rem; }
-        .ce__panel h4 { margin-bottom: .25rem; }
-        .ce__panel p { opacity: .95; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .ce-connector { position: absolute; inset: 0; pointer-events: none; }
-        .ce-connector svg { width: 2000px; height: 1200px; }
-        .ce-connector path { stroke: #6a8bff; stroke-opacity: .75; stroke-width: 2; fill: none; }
+        /* ===== CALENDLY / REVIEWS ===== */
+        .calendly, .reviews { background-color: var(--section-mid); padding: 4rem 2rem; min-height: 200px; text-align: center; }
+        .calendly { background: var(--gradient); color: white; padding: 4rem 1rem; }
+        .calendly h2, .calendly p { margin-bottom: 1.5rem; text-align: center; }
+        .calendly-inline-widget { margin: 0 auto; max-width: 100%; border-radius: 20px; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.3); }
 
-        @media (max-width: 900px){ .ce-node { width: 220px; } }
-
-</style>
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .instalaciones { flex-direction: column; }
+            .gancho h1 { font-size: 3rem; }
+        }
+        @media (max-width: 768px) { .calendly-inline-widget { height: 900px !important; } }
+    </style>
 </head>
 <body>
     <!-- ===== GANCHO ===== -->
@@ -241,12 +207,11 @@
         </div>
     </section>
 
-    <!-- ===== CLIENTES (antes PRENDAS) ===== -->
+    <!-- ===== CLIENTES (slider) ===== -->
     <section class="sliderprendas">
         <h2 style="text-align:center; margin-bottom: 2rem;"><i class="fas fa-user-tie"></i> Algunos de nuestros Clientes</h2>
         <div class="marquee">
             <div class="marquee-content">
-                <!-- Logos / placeholders -->
                 <div class="prenda">
                     <img src="https://i.postimg.cc/dtNfCyk6/clothes.png" alt="Cliente 1" />
                     <h3>Cliente 1</h3>
@@ -263,7 +228,6 @@
                     <img src="https://i.postimg.cc/dtNfCyk6/clothes.png" alt="Cliente 4" />
                     <h3>Cliente 4</h3>
                 </div>
-                <!-- duplicación para bucle -->
                 <div class="prenda">
                     <img src="https://i.postimg.cc/dtNfCyk6/clothes.png" alt="Cliente 5" />
                     <h3>Cliente 5</h3>
@@ -311,146 +275,7 @@
         </div>
     </section>
 
-    <!-- ===== CASOS DE ÉXITO ===== -->
-    <section class="casosdeexito" id="casosdeexito">
-        <div class="ce__inner">
-            <div class="ce__head">
-                <h1>Casos de Éxito</h1>
-                <h2>Celdran Abogados</h2>
-            </div>
-
-            <div class="ce__toolbar">
-                <div class="ce__filters">
-                    <button class="ce__btn" data-filter="all" aria-pressed="true">Todo</button>
-                    <button class="ce__btn" data-filter="realizamos">Qué realizamos</button>
-                    <button class="ce__btn" data-filter="verticales">Verticales</button>
-                    <button class="ce__btn" data-filter="flujo">Flujo</button>
-                </div>
-                <div class="ce__zoom">
-                    <button id="ce-zoom-out">–</button>
-                    <button id="ce-zoom-reset">100%</button>
-                    <button id="ce-zoom-in">+</button>
-                </div>
-            </div>
-
-            <div class="ce__board">
-                <div class="ce__canvas" id="ce-canvas" style="transform: scale(0.9) translate(40px, 40px);">
-                    <div class="ce__panlayer" id="ce-pan"></div>
-
-                    <!-- ===== REALIZAMOS ===== -->
-                    <div class="ce-node ce-node--clickable" data-type="realizamos" data-id="crm" style="left: 120px; top: 120px;">
-                        <h3><i class="fa-solid fa-database"></i> Digitalización completa CRM Monday</h3>
-                        <span class="ce-tag">Implementación</span>
-                        <span class="ce-tag">Formación</span>
-                    </div>
-                    <div class="ce-node ce-node--clickable" data-type="realizamos" data-id="auto" style="left: 420px; top: 120px;">
-                        <h3><i class="fa-solid fa-robot"></i> Automatizaciones de Operativa</h3>
-                        <span class="ce-tag">Notificaciones</span>
-                        <span class="ce-tag">Asignaciones</span>
-                        <span class="ce-tag">KPIs</span>
-                    </div>
-
-                    <!-- ===== VERTICALES ===== -->
-                    <div class="ce-node ce-node--clickable" data-type="verticales" data-id="irph" style="left: 820px; top: 120px;"><h3>IRPH</h3><span class="ce-tag">Vertical</span></div>
-                    <div class="ce-node ce-node--clickable" data-type="verticales" data-id="brecha" style="left: 1060px; top: 160px;"><h3>Brecha Salarial</h3><span class="ce-tag">Vertical</span></div>
-                    <div class="ce-node ce-node--clickable" data-type="verticales" data-id="revolving" style="left: 980px; top: 300px;"><h3>Revolving</h3><span class="ce-tag">Vertical</span></div>
-                    <div class="ce-node ce-node--clickable" data-type="verticales" data-id="jubilacion" style="left: 760px; top: 300px;"><h3>Complemento de Jubilación</h3><span class="ce-tag">Vertical</span></div>
-                    <div class="ce-node ce-node--clickable" data-type="verticales" data-id="vehiculos" style="left: 1180px; top: 300px;"><h3>Créditos de Vehículos</h3><span class="ce-tag">Vertical</span></div>
-                    <!-- Slots (placeholder) para completar 8 -->
-                    <div class="ce-node ce-node--clickable" data-type="verticales" data-id="v6" style="left: 820px; top: 460px;"><h3>Vertical 6</h3><span class="ce-tag">Próx.</span></div>
-                    <div class="ce-node ce-node--clickable" data-type="verticales" data-id="v7" style="left: 1040px; top: 460px;"><h3>Vertical 7</h3><span class="ce-tag">Próx.</span></div>
-                    <div class="ce-node ce-node--clickable" data-type="verticales" data-id="v8" style="left: 1260px; top: 460px;"><h3>Vertical 8</h3><span class="ce-tag">Próx.</span></div>
-
-                    <!-- ===== FLUJO ===== -->
-                    <div class="ce-node" data-type="flujo" style="left: 140px; top: 560px;">
-                        <h3><i class="fa-solid fa-bullhorn"></i> Anuncio</h3>
-                        <span class="ce-tag">Facebook/Google</span>
-                    </div>
-                    <div class="ce-node" data-type="flujo" style="left: 420px; top: 560px;">
-                        <h3><i class="fa-solid fa-envelope"></i> Email</h3>
-                        <span class="ce-tag">Secuencia 1</span>
-                    </div>
-                    <div class="ce-node" data-type="flujo" style="left: 700px; top: 560px;">
-                        <h3><i class="fa-solid fa-envelope-open-text"></i> Email</h3>
-                        <span class="ce-tag">Secuencia 2</span>
-                    </div>
-                    <div class="ce-node" data-type="flujo" style="left: 980px; top: 560px;">
-                        <h3><i class="fa-brands fa-whatsapp"></i> WhatsApp</h3>
-                        <span class="ce-tag">IA</span>
-                    </div>
-                    <div class="ce-node" data-type="flujo" style="left: 1260px; top: 560px;">
-                        <h3><i class="fa-solid fa-gear"></i> Seteo WhatsApp</h3>
-                        <span class="ce-tag">Agenda</span>
-                    </div>
-
-                    <!-- Conectores -->
-                    <div class="ce-connector">
-                        <svg viewBox="0 0 2000 1200" preserveAspectRatio="none">
-                            <path d="M 260 590 C 330 590 330 590 420 590" />
-                            <path d="M 540 590 C 610 590 610 590 700 590" />
-                            <path d="M 820 590 C 890 590 890 590 980 590" />
-                            <path d="M 1100 590 C 1180 590 1180 590 1260 590" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <div class="ce__panel" id="ce-panel">
-                <h4>Explora lo que hicimos</h4>
-                <p>Usa los filtros para ver “Qué realizamos”, “Verticales” y el “Flujo”. Haz clic en cualquier tarjeta para ver detalles aquí.</p>
-            </div>
-        </div>
-
-        <script>
-        (function(){
-            const canvas = document.getElementById('ce-canvas');
-            const panlayer = document.getElementById('ce-pan');
-            const panel = document.getElementById('ce-panel');
-            const filterBtns = document.querySelectorAll('.ce__btn[data-filter]');
-            const zoomIn = document.getElementById('ce-zoom-in');
-            const zoomOut = document.getElementById('ce-zoom-out');
-            const zoomReset = document.getElementById('ce-zoom-reset');
-            const nodes = Array.from(document.querySelectorAll('.ce-node'));
-
-            let scale = 0.9, offsetX = 40, offsetY = 40; // initial
-            function applyTransform(){ canvas.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`; }
-
-            // Filters
-            filterBtns.forEach(btn=>{
-                btn.addEventListener('click', ()=>{
-                    filterBtns.forEach(b=>b.setAttribute('aria-pressed','false'));
-                    btn.setAttribute('aria-pressed','true');
-                    const f = btn.dataset.filter;
-                    nodes.forEach(n=>{
-                        const type = n.dataset.type;
-                        n.style.display = (f==='all' || f===type) ? 'grid' : 'none';
-                    });
-                })
-            });
-
-            // Zoom
-            zoomIn.addEventListener('click', ()=>{ scale = Math.min(2, scale + 0.1); applyTransform(); zoomReset.innerText = Math.round(scale*100)+'%'; });
-            zoomOut.addEventListener('click', ()=>{ scale = Math.max(0.5, scale - 0.1); applyTransform(); zoomReset.innerText = Math.round(scale*100)+'%'; });
-            zoomReset.addEventListener('click', ()=>{ scale = 1; offsetX = 0; offsetY = 0; applyTransform(); zoomReset.innerText = '100%'; });
-
-            // Panning
-            let dragging=false, startX=0, startY=0;
-            function onDown(e){ dragging=true; startX = (e.touches? e.touches[0].clientX : e.clientX); startY = (e.touches? e.touches[0].clientY : e.clientY); }
-            function onMove(e){ if(!dragging) return; const x = (e.touches? e.touches[0].clientX : e.clientX); const y = (e.touches? e.touches[0].clientY : e.clientY); offsetX += (x - startX)/scale; offsetY += (y - startY)/scale; startX = x; startY = y; applyTransform(); }
-            function onUp(){ dragging=false; }
-            panlayer.addEventListener('mousedown', onDown); window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
-            panlayer.addEventListener('touchstart', onDown, {passive:true}); window.addEventListener('touchmove', onMove, {passive:true}); window.addEventListener('touchend', onUp);
-
-            // Details
-            const DETAILS = {
-                crm: {title:'Digitalización completa CRM Monday', body:'Migración de procesos, tableros, permisos y reporting. Integración con correo y formularios.'},
-                auto: {title:'Automatizaciones de Operativa', body:'Triggers para asignaciones, recordatorios, SLAs y métricas clave.'},
-                irph: {title:'IRPH', body:'Captación y seguimiento de leads interesados en reclamaciones IRPH.'},
-                brecha: {title:'Brecha Salarial', body:'Embudo dedicado para consultas de brecha salarial y documentación.'},
-                revolving: {title:'Revolving', body:'Segmentación por tipo de tarjeta y estado del caso.'},
-                jubilacion: {title:'Complemento de Jubilación', body:'Información previa y cualificación automática.'},
-                vehiculos: {title:'Créditos de Vehículos', body:'Flujo para reclamaciones por financiación de vehículos.'},
-                v6: {title:'Vertical 6', body:'Espacio reservado para una vertical adicion
+    <!-- ===== ROI CALCULATOR ===== -->
     <section class="roi" id="roi">
         <div class="roi__inner">
             <h1>Calcula tu Retorno de la Inversión</h1>
@@ -519,7 +344,7 @@
         </div>
     </section>
 
-    <!-- ===== FORMULARIO ===== -->
+    <!-- ===== FORMULARIO PRINCIPAL ===== -->
     <section class="formulario-dinamico" id="formulario">
         <div class="formulariocompleto">
 
@@ -594,6 +419,7 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+            // ===== Multi-step form =====
             const steps = document.querySelectorAll(".form-step");
             const nextButtons = document.querySelectorAll(".boton-siguiente");
 
@@ -603,13 +429,13 @@
             }
 
             nextButtons.forEach(btn => {
-                btn.addEventListener("click", (e) => {
+                btn.addEventListener("click", () => {
                     const next = btn.dataset.next;
                     if (next) showStep(next);
                 });
             });
 
-            // Toggle chips (permitir selección múltiple)
+            // Toggle chips (selección múltiple)
             document.querySelectorAll('.grupo-opciones').forEach(grupo => {
                 grupo.addEventListener('click', (e) => {
                     const target = e.target.closest('.chip-opcion');
@@ -710,3 +536,32 @@
                     const servicio = document.getElementById('roi-servicio').value.trim();
                     const ticketStr = document.getElementById('roi-ticket').value.trim();
                     const ticket = parseMoney(ticketStr);
+
+                    CURRENT.cfg = SECTOR_CONFIG[sector] || DEFAULT_CONFIG;
+                    CURRENT.ticket = ticket;
+
+                    // Prefill con inversión 0
+                    refresh(0);
+
+                    // Loader → resultados
+                    roiLoader.classList.add('active');
+                    roiResult.classList.add('hidden');
+                    setTimeout(() => {
+                        roiLoader.classList.remove('active');
+                        roiResult.classList.remove('hidden');
+                    }, 1200);
+                });
+
+                // Actualiza resultados al mover el rango
+                slider.addEventListener('input', (e) => {
+                    const inv = parseInt(e.target.value, 10) || 0;
+                    refresh(inv);
+                });
+
+                // Estado inicial
+                refresh(parseInt(slider.value, 10) || 0);
+            }
+        });
+    </script>
+</body>
+</html>
