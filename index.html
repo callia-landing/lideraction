@@ -413,7 +413,58 @@
   .vn-note{ transform:none; }
 }
 
+/* ===== Globe estilo Miro ===== */
+.globo-mapa{ background:#0d0f1f; padding:4rem 2rem; }
+.gm__inner{ max-width:1200px; margin:0 auto; display:grid; gap:1.5rem; }
+.gm__head{ text-align:center; }
+.gm__head h1{ font-size:2.1rem; margin-bottom:.25rem; }
+.gm__head p{ opacity:.85; }
 
+.gm__grid{
+  display:grid; gap:2rem; align-items:center;
+  grid-template-columns: minmax(280px,1.2fr) minmax(220px,.8fr);
+}
+@media (max-width: 980px){ .gm__grid{ grid-template-columns: 1fr; } }
+
+.gm__stage{
+  position:relative; aspect-ratio:1/1; width:100%; max-width:620px; margin:auto;
+  border-radius:18px; padding:10px; background:#0f122a;
+  border:1px dashed #3a3e78; box-shadow:0 10px 30px rgba(0,0,0,.35) inset;
+}
+.gm-globe{
+  width:100%; height:100%;
+  background:
+   radial-gradient(140% 100% at 50% 0%, #182055 0%, #0d1027 65%) /* fondo */,
+   linear-gradient(transparent 31px, #ffffff12 32px),
+   linear-gradient(90deg, transparent 31px, #ffffff12 32px);
+  background-size:auto, 32px 32px, 32px 32px; /* grid estilo Miro */
+  border-radius:12px;
+}
+
+/* Tooltip */
+.gm-tip{
+  position:absolute; pointer-events:none; display:none;
+  transform:translate(-50%, -120%);
+  background:#14183a; color:#fff; border:1px solid #ffffff22;
+  padding:.35rem .6rem; border-radius:8px; font-weight:800; font-size:.9rem;
+  box-shadow:0 6px 16px rgba(0,0,0,.4);
+  white-space:nowrap;
+}
+
+/* Notas Miro */
+.gm__notes{
+  display:grid; gap:.75rem; grid-template-columns: repeat(auto-fill, minmax(130px,1fr));
+}
+.gm-note{
+  padding:12px 14px; border-radius:12px; font-weight:900; color:#0b0b16;
+  box-shadow:0 10px 24px rgba(0,0,0,.35);
+}
+.gm-green{ background:#63e6a5; }
+.gm-yellow{ background:#ffe680; }
+.gm-teal{ background:#7ad9ff; }
+
+
+        
         
     </style>
 </head>
@@ -1002,11 +1053,40 @@
         <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
     </section>
 
-    <!-- ===== REVIEWS ===== -->
-    <section class="reviews">
-        <h2><i class="fas fa-star"></i> Lo que dicen nuestros clientes</h2>
-        <p>Testimonios próximamente...</p>
-    </section>
+    <!-- ===== CLIENTES POR EL MUNDO (Globo estilo Miro) ===== -->
+<section class="globo-mapa" id="clientes-mundo">
+  <div class="gm__inner">
+    <div class="gm__head">
+      <h1>Clientes por el mundo</h1>
+      <p>Localizaciones donde ya trabajamos</p>
+    </div>
+
+    <div class="gm__grid">
+      <!-- Globo -->
+      <div class="gm__stage">
+        <canvas id="gm-globe" class="gm-globe" width="640" height="640" aria-label="Globo terráqueo"></canvas>
+        <div class="gm-tip" id="gm-tip" role="status" aria-live="polite"></div>
+      </div>
+
+      <!-- Notas estilo Miro -->
+      <div class="gm__notes">
+        <div class="gm-note gm-green">Miami</div>
+        <div class="gm-note gm-green">Florida</div>
+        <div class="gm-note gm-green">Orlando</div>
+        <div class="gm-note gm-green">Texas</div>
+
+        <div class="gm-note gm-yellow">Mexico</div>
+        <div class="gm-note gm-yellow">Ecuador</div>
+        <div class="gm-note gm-yellow">Argentina</div>
+
+        <div class="gm-note gm-teal">España</div>
+        <div class="gm-note gm-teal">Francia</div>
+        <div class="gm-note gm-teal">Dubai</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -1400,6 +1480,166 @@
   }, {passive:false});
 
   apply();
+})();
+
+
+        /* ===== Globo terráqueo con proyección ortográfica y rotación ===== */
+(function(){
+  const canvas = document.getElementById('gm-globe');
+  if(!canvas) return;
+  const tip = document.getElementById('gm-tip');
+  const ctx = canvas.getContext('2d');
+
+  // Escala retina
+  const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+  const cssSize = canvas.getBoundingClientRect();
+  canvas.width  = Math.round(cssSize.width * dpr);
+  canvas.height = Math.round(cssSize.height * dpr);
+
+  const W = canvas.width, H = canvas.height;
+  const R = Math.min(W, H) * 0.42; // radio del globo
+  const CX = W/2, CY = H/2;
+
+  // Datos de ubicaciones (lat,lon en grados)
+  const pins = [
+    {name:'Miami',     lat:25.7617, lon:-80.1918},
+    {name:'Florida',   lat:27.6648, lon:-81.5158},  // centro del estado
+    {name:'Orlando',   lat:28.5383, lon:-81.3792},
+    {name:'Texas',     lat:31.0000, lon:-100.0000},
+    {name:'Mexico',    lat:19.4326, lon:-99.1332},
+    {name:'Ecuador',   lat:-0.1807, lon:-78.4678},
+    {name:'Argentina', lat:-34.6037, lon:-58.3816},
+    {name:'España',    lat:40.4168, lon:-3.7038},
+    {name:'Francia',   lat:48.8566, lon:2.3522},
+    {name:'Dubai',     lat:25.2048, lon:55.2708}
+  ];
+
+  // Utilidades
+  const toRad = d => d * Math.PI / 180;
+  function project(lat, lon, rot){ // proyección ortográfica
+    const phi = toRad(lat), lam = toRad(lon) + rot;
+    const x =  Math.cos(phi) * Math.sin(lam);
+    const y = -Math.sin(phi);
+    const z =  Math.cos(phi) * Math.cos(lam); // cara visible si z>0
+    return { x: CX + R*x, y: CY + R*y, z };
+  }
+
+  // Dibuja paralelos y meridianos simples
+  function graticule(rot){
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = 1 * dpr;
+
+    // Meridianos cada 30º
+    for(let lam=-180; lam<=180; lam+=30){
+      ctx.beginPath();
+      let move = true;
+      for(let lat=90; lat>=-90; lat-=3){
+        const p = project(lat, lam, rot);
+        if(p.z<=0) { move = true; continue; }
+        if(move){ ctx.moveTo(p.x, p.y); move=false; } else { ctx.lineTo(p.x, p.y); }
+      }
+      ctx.stroke();
+    }
+    // Paralelos cada 30º
+    for(let lat=-60; lat<=60; lat+=30){
+      ctx.beginPath();
+      let move = true;
+      for(let lam=-180; lam<=180; lam+=3){
+        const p = project(lat, lam, rot);
+        if(p.z<=0) { move = true; continue; }
+        if(move){ ctx.moveTo(p.x, p.y); move=false; } else { ctx.lineTo(p.x, p.y); }
+      }
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // Dibuja el globo base (sombra y borde)
+  function sphere(){
+    const grad = ctx.createRadialGradient(CX - R*0.4, CY - R*0.6, R*0.2, CX, CY, R);
+    grad.addColorStop(0, '#2740a8');
+    grad.addColorStop(1, '#0b0f2a');
+
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(CX, CY, R, 0, Math.PI*2); ctx.fill();
+
+    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+    ctx.lineWidth = 2 * dpr;
+    ctx.stroke();
+  }
+
+  function drawPins(rot){
+    ctx.save();
+    pins.forEach(pin=>{
+      const p = project(pin.lat, pin.lon, rot);
+      if(p.z <= 0) return; // ocultar los del lado opuesto
+
+      // halo
+      ctx.beginPath(); ctx.arc(p.x, p.y, 5*dpr, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(37,117,252,0.35)'; ctx.fill();
+
+      // pin
+      ctx.beginPath(); ctx.arc(p.x, p.y, 2.2*dpr, 0, Math.PI*2);
+      ctx.fillStyle = '#ffffff'; ctx.fill();
+
+      // etiqueta mínima
+      ctx.font = `${12*dpr}px 'Raleway', system-ui, -apple-system, sans-serif`;
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(pin.name, p.x + 8*dpr, p.y);
+      pin._screen = p; // guardar para tooltip hit-test
+    });
+    ctx.restore();
+  }
+
+  // Tooltip simple (hover)
+  function enableTooltip(){
+    const rect = () => canvas.getBoundingClientRect();
+    canvas.addEventListener('mousemove', (e)=>{
+      const r = rect();
+      const mx = (e.clientX - r.left) * dpr;
+      const my = (e.clientY - r.top)  * dpr;
+      const near = pins.find(p => p._screen && p._screen.z>0 &&
+        Math.hypot(p._screen.x - mx, p._screen.y - my) < 10*dpr);
+      if(near){
+        tip.style.display = 'block';
+        tip.textContent = near.name;
+        tip.style.left = `${e.clientX - r.left}px`;
+        tip.style.top  = `${e.clientY - r.top}px`;
+      } else {
+        tip.style.display = 'none';
+      }
+    });
+    canvas.addEventListener('mouseleave', ()=> tip.style.display='none');
+  }
+
+  let rot = 0, running = true;
+  function frame(){
+    if(!running) return;
+    ctx.clearRect(0,0,W,H);
+
+    // Sombra detrás
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,0.55)';
+    ctx.shadowBlur  = 40 * dpr;
+    ctx.shadowOffsetY = 10 * dpr;
+    sphere();
+    ctx.restore();
+
+    graticule(rot);
+    drawPins(rot);
+
+    rot += 0.004; // velocidad de rotación
+    requestAnimationFrame(frame);
+  }
+
+  // Pausa al pasar el ratón
+  canvas.addEventListener('mouseenter', ()=> running=true && frame());
+  canvas.addEventListener('mouseleave', ()=> running=true);
+  // Iniciar
+  enableTooltip();
+  frame();
 })();
     </script>
 </body>
