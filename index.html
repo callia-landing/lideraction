@@ -464,7 +464,73 @@
 .gm-teal{ background:#7ad9ff; }
 
 
-        
+
+
+        /* ===== CÓMO TRABAJAMOS POR SEMANAS ===== */
+.semanas{
+  background:#07112a; /* acorde a tu paleta oscura */
+  padding:4rem 2rem;
+}
+.semanas__head{
+  text-align:center; margin-bottom:2rem;
+}
+.semanas__head h2{
+  font-size:2rem; font-weight:900;
+}
+
+.semanas__grid{
+  max-width:1200px; margin:0 auto;
+  display:grid; gap:2rem;
+  grid-template-columns: repeat(4, 1fr);
+}
+@media (max-width:1100px){ .semanas__grid{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width:640px){ .semanas__grid{ grid-template-columns: 1fr; } }
+
+.wk-card{
+  position:relative;
+  padding:3.2rem 2rem 2.2rem;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,0.08);
+  background:
+    radial-gradient(180% 120% at 25% 0%, #1a2f66 0%, #0f1b3f 60%, #0b1431 100%);
+  box-shadow:
+    inset 0 0 0 2px rgba(255,255,255,0.03),
+    0 18px 40px rgba(0,0,0,0.35);
+  min-height: 260px;
+  display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start;
+  transition:transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.wk-card:hover{
+  transform: translateY(-3px);
+  border-color: rgba(255,255,255,0.14);
+  box-shadow:
+    inset 0 0 0 2px rgba(255,255,255,0.06),
+    0 24px 48px rgba(0,0,0,0.45);
+}
+
+.wk-badge{
+  width:120px; height:120px; border-radius:50%;
+  margin:-2rem auto 1.25rem; /* sensación de “flotar” en la parte superior */
+  background:
+    radial-gradient(120% 100% at 30% 30%, #2f6df3 0%, #183076 60%, #0f235f 100%);
+  color:#fff; display:flex; align-items:center; justify-content:center;
+  font-weight:900; font-size:2.6rem; letter-spacing:.5px;
+  box-shadow: 0 12px 28px rgba(0,0,0,.45);
+  position:relative;
+}
+.wk-badge::after{
+  content:""; position:absolute; inset:-12px; border-radius:50%;
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow: inset 0 0 0 10px rgba(255,255,255,.05);
+}
+
+.wk-card p{
+  color:#e5ecff; opacity:.95; font-size:1.15rem; line-height:1.9;
+}
+
+/* opcional: enfatiza <strong> como en el mockup */
+.wk-card p strong{ color:#ffffff; }
+
         
     </style>
 </head>
@@ -1050,6 +1116,54 @@
 <div class="calendly-inline-widget" data-url="https://calendly.com/stumarketing-info/30min" style="min-width:320px;height:700px;"></div>
 <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
 <!-- Calendly inline widget end -->
+
+    <!-- ===== CÓMO TRABAJAMOS POR SEMANAS ===== -->
+<section class="semanas" id="como-trabajamos">
+  <div class="semanas__head">
+    <h2>Cómo Trabajamos Por Semanas</h2>
+  </div>
+
+  <div class="semanas__grid">
+    <!-- Card 01 -->
+    <article class="wk-card">
+      <div class="wk-badge">01</div>
+      <p>
+        Accedemos a tu <strong>Facebook Ads Manager</strong><br>
+        donde realizaremos los anuncios.
+      </p>
+    </article>
+
+    <!-- Card 02 -->
+    <article class="wk-card">
+      <div class="wk-badge">02</div>
+      <p>
+        Construimos tu <strong>CRM Excel Inteligente</strong><br>
+        donde aparecerán todos tus clientes potenciales.
+      </p>
+    </article>
+
+    <!-- Card 03 -->
+    <article class="wk-card">
+      <div class="wk-badge">03</div>
+      <p>
+        Construimos tu <strong>BOT IA en WhatsApp</strong><br>
+        que cualifique y agende directamente en tu calendar.
+      </p>
+    </article>
+
+    <!-- Card 04 -->
+    <article class="wk-card">
+      <div class="wk-badge">04</div>
+      <p>
+        Te ayudaremos a mejorar tus <strong>métricas de venta</strong><br>
+        con metodologías actuales.
+      </p>
+    </article>
+  </div>
+</section>
+
+
+    
     <!-- ===== CLIENTES POR EL MUNDO (Globo estilo Miro) ===== -->
 <section class="globo-mapa" id="clientes-mundo">
   <div class="gm__inner">
