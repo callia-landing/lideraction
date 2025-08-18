@@ -1611,25 +1611,76 @@
     canvas.addEventListener('mouseleave', ()=> tip.style.display='none');
   }
 
+    // --- Continentes MUY simplificados (lon, lat) ---
+const LAND = [
+  {name:'NorthAmerica', poly:[
+    [-168,72],[-52,72],[-52,20],[-85,15],[-120,24],[-150,45],[-168,72]
+  ]},
+  {name:'SouthAmerica', poly:[
+    [-82,12],[-34,12],[-52,-55],[-76,-52],[-82,12]
+  ]},
+  {name:'EurasiaAfrica', poly:[
+    [-10,72],[160,72],[160,10],[60,-35],[12,-35],[-17,36],[-10,72]
+  ]},
+  {name:'Australia', poly:[
+    [112,-10],[154,-10],[154,-44],[112,-44],[112,-10]
+  ]},
+  {name:'Greenland', poly:[
+    [-52,80],[-17,80],[-17,60],[-52,60],[-52,80]
+  ]},
+];
+
+// Dibuja los polígonos visibles de LAND
+function drawLand(rot){
+  ctx.save();
+  ctx.fillStyle   = 'rgba(92,200,160,0.25)';  // relleno
+  ctx.strokeStyle = 'rgba(255,255,255,0.20)'; // contorno suave
+  ctx.lineWidth   = 1 * dpr;
+
+  LAND.forEach(region=>{
+    let move = true;
+    ctx.beginPath();
+    for (let i=0; i<region.poly.length; i++){
+      const [lon, lat] = region.poly[i];
+      const p = project(lat, lon, rot);
+      if (p.z <= 0) { move = true; continue; } // oculta lado opuesto
+      if (move){ ctx.moveTo(p.x, p.y); move=false; }
+      else { ctx.lineTo(p.x, p.y); }
+    }
+    ctx.closePath();
+    ctx.fill(); 
+    ctx.stroke();
+  });
+
+  ctx.restore();
+}
+
+
   let rot = 0, running = true;
   function frame(){
-    if(!running) return;
-    ctx.clearRect(0,0,W,H);
+  if(!running) return;
+  ctx.clearRect(0,0,W,H);
 
-    // Sombra detrás
-    ctx.save();
-    ctx.shadowColor = 'rgba(0,0,0,0.55)';
-    ctx.shadowBlur  = 40 * dpr;
-    ctx.shadowOffsetY = 10 * dpr;
-    sphere();
-    ctx.restore();
+  // Sombra y esfera
+  ctx.save();
+  ctx.shadowColor   = 'rgba(0,0,0,0.55)';
+  ctx.shadowBlur    = 40 * dpr;
+  ctx.shadowOffsetY = 10 * dpr;
+  sphere();
+  ctx.restore();
 
-    graticule(rot);
-    drawPins(rot);
+  // >>> Tierra (nuevo)
+  drawLand(rot);
 
-    rot += 0.004; // velocidad de rotación
-    requestAnimationFrame(frame);
-  }
+  // Rejilla y pins
+  graticule(rot);
+  drawPins(rot);
+
+  // Rotación
+  rot += 0.004;
+  requestAnimationFrame(frame);
+}
+
 
   // Pausa al pasar el ratón
   canvas.addEventListener('mouseenter', ()=> running=true && frame());
