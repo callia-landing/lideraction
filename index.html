@@ -298,6 +298,70 @@
   .cd-note{ transform:none; }
 }
 
+
+        /* ===== Flipping House – Canvas estilo Miro ===== */
+.fh-overlay{
+  position:fixed; inset:0; display:none; z-index:9999;
+  background:rgba(6,8,20,.75); backdrop-filter: blur(2px);
+}
+.fh-overlay.is-open{ display:block; }
+
+.fh-modal{ position:relative; width:100%; height:100%; padding:2rem; }
+.fh-close{
+  position:absolute; top:16px; right:20px; z-index:2;
+  width:42px; height:42px; border-radius:50%; border:1px solid #ffffff33;
+  background:#0e1030; color:#fff; font-size:24px; line-height:42px; cursor:pointer;
+}
+
+.fh-board{
+  width:100%; height:100%; border:1px dashed #3a3e78; border-radius:18px;
+  background: radial-gradient(ellipse at top, #121434, #0d0f1f 60%);
+  overflow:hidden; position:relative;
+}
+
+/* Canvas con grid */
+.fh-canvas{
+  position:relative; width:2000px; height:1200px; transform-origin:0 0; transition:transform .15s ease-out;
+  background-image:
+    linear-gradient(transparent 31px, #ffffff12 32px),
+    linear-gradient(90deg, transparent 31px, #ffffff12 32px);
+  background-size:32px 32px;
+}
+.fh-panlayer{ position:absolute; inset:0; cursor:grab; }
+.fh-panlayer:active{ cursor:grabbing; }
+
+.fh-label{
+  position:absolute; font-size:36px; color:#fff; font-weight:900; letter-spacing:.5px;
+  text-shadow:0 3px 10px rgba(0,0,0,.45);
+}
+
+/* Notas */
+.fh-note{
+  position:absolute; min-width:150px; max-width:260px; padding:14px 16px;
+  border-radius:12px; box-shadow:0 10px 24px rgba(0,0,0,.35);
+  font-weight:800; letter-spacing:.2px; color:#0b0b16;
+}
+.fh-note.fh-wide{ max-width:340px; }
+
+.fh-yellow{ background:#ffe680; }
+.fh-teal  { background:#7ad9ff; }
+.fh-green { background:#63e6a5; }
+.fh-pink  { background:#ff8bd4; }
+
+.fh-note a{ color:#0b0b16; text-decoration:underline; }
+
+/* Imagen */
+.fh-photo{ position:absolute; width:220px; border-radius:12px; overflow:hidden; box-shadow:0 10px 24px rgba(0,0,0,.35); }
+.fh-photo img{ width:100%; height:auto; display:block; }
+
+/* Conectores */
+.fh-lines{ position:absolute; inset:0; pointer-events:none; }
+.fh-lines path{ stroke:#6a8bff; stroke-opacity:.85; stroke-width:2; fill:none; }
+
+@media (max-width: 900px){
+  .fh-note{ transform:none; }
+}
+
         
     </style>
 </head>
@@ -543,6 +607,116 @@
   </div>
 </section>
 
+<!-- FLIPPING HOUSE – Canvas estilo Miro (R2R / AOC) -->
+<section id="flipping-miro" class="fh-overlay" aria-hidden="true">
+  <div class="fh-modal" role="dialog" aria-label="Flipping House - Embudos">
+    <button class="fh-close" aria-label="Cerrar">×</button>
+
+    <div class="fh-board">
+      <div class="fh-canvas" id="fh-canvas" style="transform: scale(0.95) translate(20px, 20px);">
+        <div class="fh-panlayer" id="fh-pan" title="Arrastra para moverte"></div>
+
+        <!-- Títulos -->
+        <div class="fh-label" style="left:220px; top:40px;">R2R</div>
+        <div class="fh-label" style="left:1220px; top:40px;">AOC</div>
+
+        <!-- ========= LADO IZQUIERDO · R2R ========= -->
+        <!-- Funnel superior -->
+        <div class="fh-note fh-yellow" style="left:160px; top:120px;">Ad</div>
+        <div class="fh-note fh-yellow" style="left:320px; top:120px;">Lead Magnet</div>
+        <div class="fh-note fh-yellow" style="left:520px; top:120px;">VSL</div>
+        <div class="fh-note fh-yellow" style="left:700px; top:120px;">Carta de ventas</div>
+        <div class="fh-note fh-yellow" style="left:900px; top:120px;">Checkout</div>
+
+        <div class="fh-note fh-yellow" style="left:920px; top:260px;">CRM</div>
+        <div class="fh-note fh-yellow" style="left:1060px; top:260px;">Closers / Setter</div>
+
+        <!-- Email marketing + Masterclasses -->
+        <div class="fh-note fh-yellow" style="left:300px; top:220px;">Email marketing</div>
+
+        <div class="fh-note fh-teal" style="left:260px; top:360px;">Master Class 1</div>
+        <div class="fh-note fh-teal" style="left:260px; top:440px;">Master Class 2</div>
+        <div class="fh-note fh-teal" style="left:260px; top:520px;">Master Class 3</div>
+        <div class="fh-note fh-teal" style="left:260px; top:600px;">Master Class 4</div>
+
+        <div class="fh-note fh-yellow" style="left:160px; top:500px;">Zapier</div>
+
+        <div class="fh-note fh-teal" style="left:560px; top:520px;">Agenda</div>
+        <div class="fh-note fh-yellow" style="left:560px; top:600px;">Página de Producto</div>
+        <div class="fh-note fh-teal fh-wide" style="left:760px; top:600px;">Gracias por Agendar – Flip Academy</div>
+
+        <!-- ========= LADO DERECHO · AOC ========= -->
+        <!-- Funnel superior -->
+        <div class="fh-note fh-yellow" style="left:1160px; top:120px;">Ad</div>
+        <div class="fh-note fh-yellow" style="left:1320px; top:120px;">Lead Magnet</div>
+        <div class="fh-note fh-yellow" style="left:1520px; top:120px;">VSL</div>
+        <div class="fh-note fh-yellow" style="left:1700px; top:120px;">Carta de ventas</div>
+        <div class="fh-note fh-yellow" style="left:1760px; top:220px;">Checkout</div>
+
+        <div class="fh-note fh-yellow fh-wide" style="left:1730px; top:340px;">FORMULARIO INSTANTÁNEO</div>
+        <div class="fh-note fh-teal fh-wide" style="left:1220px; top:300px;">
+          AOC:<br>
+          <a href="https://flippinghouse-academy.thinkific.com/enroll/2456624" target="_blank" rel="noopener">thinkific.com/enroll/2456624</a>
+        </div>
+
+        <!-- Emailing + Masterclasses -->
+        <div class="fh-note fh-yellow" style="left:1220px; top:420px;">Zapier</div>
+
+        <div class="fh-note fh-teal" style="left:1400px; top:460px;">Email / Newsletter</div>
+        <div class="fh-note fh-teal" style="left:1400px; top:540px;">Email marketing</div>
+
+        <div class="fh-note fh-teal" style="left:1600px; top:460px;">Master Class 1</div>
+        <div class="fh-note fh-teal" style="left:1600px; top:540px;">Master Class 2</div>
+        <div class="fh-note fh-teal" style="left:1600px; top:620px;">Master Class 3</div>
+        <div class="fh-note fh-teal" style="left:1600px; top:700px;">Master Class 4</div>
+
+        <div class="fh-note fh-teal" style="left:1460px; top:720px;">Agenda</div>
+        <div class="fh-note fh-teal fh-wide" style="left:1660px; top:740px;">Gracias por Agendar – Flip Academy</div>
+
+        <!-- Conectores -->
+        <svg class="fh-lines" viewBox="0 0 2000 1200" preserveAspectRatio="none" aria-hidden="true">
+          <!-- R2R top line -->
+          <path d="M 210 140 C 260 140 300 140 360 140" />
+          <path d="M 480 140 C 520 140 560 140 620 140" />
+          <path d="M 700 140 C 760 140 820 140 900 140" />
+
+          <!-- R2R to CRM/closers -->
+          <path d="M 980 160 C 1000 200 1000 220 980 260" />
+          <path d="M 980 160 C 1080 200 1110 220 1120 260" />
+
+          <!-- Emails to masters (R2R) -->
+          <path d="M 360 240 C 320 320 300 340 300 360" />
+          <path d="M 360 240 C 320 360 300 420 300 440" />
+          <path d="M 360 240 C 320 420 300 500 300 520" />
+          <path d="M 360 240 C 320 480 300 580 300 600" />
+
+          <!-- Masters -> Agenda / Producto -->
+          <path d="M 320 360 C 420 420 500 480 580 520" />
+          <path d="M 320 600 C 420 600 500 600 560 600" />
+
+          <!-- AOC top line -->
+          <path d="M 1200 140 C 1280 140 1320 140 1360 140" />
+          <path d="M 1480 140 C 1560 140 1600 140 1680 140" />
+          <path d="M 1760 180 C 1760 240 1760 280 1760 320" />
+
+          <!-- AOC: Zapier y emails -->
+          <path d="M 1760 360 C 1680 380 1600 400 1500 440" />
+          <path d="M 1240 440 C 1320 460 1360 480 1400 500" />
+          <path d="M 1240 440 C 1320 520 1360 560 1400 580" />
+
+          <!-- Email -> masters -->
+          <path d="M 1460 500 C 1520 500 1560 500 1600 500" />
+          <path d="M 1460 580 C 1520 580 1560 580 1600 580" />
+          <path d="M 1460 660 C 1520 660 1560 660 1600 660" />
+          <path d="M 1460 720 C 1500 720 1540 720 1600 720" />
+
+          <!-- AOC -> Agenda / Gracias -->
+          <path d="M 1600 720 C 1640 720 1680 730 1720 740" />
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
 
 
     
@@ -967,6 +1141,66 @@
   // --- Pan con arrastre + zoom con rueda
   const canvas = document.getElementById('cd-canvas');
   const panlayer = document.getElementById('cd-pan');
+  let scale = 0.95, offX = 20, offY = 20;
+  function apply(){ canvas.style.transform = `scale(${scale}) translate(${offX}px, ${offY}px)`; }
+
+  let dragging=false, sx=0, sy=0;
+  function down(e){ dragging = true; sx = (e.touches? e.touches[0].clientX : e.clientX); sy = (e.touches? e.touches[0].clientY : e.clientY); }
+  function move(e){
+    if(!dragging) return;
+    const x = (e.touches? e.touches[0].clientX : e.clientX);
+    const y = (e.touches? e.touches[0].clientY : e.clientY);
+    offX += (x - sx) / scale; offY += (y - sy) / scale; sx = x; sy = y; apply();
+  }
+  function up(){ dragging=false; }
+
+  panlayer.addEventListener('mousedown', down);
+  window.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', up);
+  panlayer.addEventListener('touchstart', down, {passive:true});
+  window.addEventListener('touchmove', move, {passive:true});
+  window.addEventListener('touchend', up);
+
+  overlay?.addEventListener('wheel', (e)=>{
+    if(!overlay.classList.contains('is-open')) return;
+    e.preventDefault();
+    const delta = Math.sign(e.deltaY);
+    scale = Math.min(2, Math.max(0.6, scale - delta*0.05));
+    apply();
+  }, {passive:false});
+
+  apply();
+})();
+
+
+        (function(){
+  // --- Abrir al hacer clic en la 3ª .prenda del carrusel
+  function getThirdPrenda(){
+    const cards = document.querySelectorAll('.sliderprendas .prenda');
+    return cards[2] || null; // tercera tarjeta
+  }
+
+  const overlay = document.getElementById('flipping-miro');
+  const closeBtn = overlay?.querySelector('.fh-close');
+
+  function openOverlay(){ overlay?.classList.add('is-open'); }
+  function closeOverlay(){ overlay?.classList.remove('is-open'); }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const card = getThirdPrenda();
+    if(card){
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', openOverlay);
+    }
+  });
+
+  closeBtn?.addEventListener('click', closeOverlay);
+  overlay?.addEventListener('click', (e)=>{ if(e.target === overlay) closeOverlay(); });
+  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeOverlay(); });
+
+  // --- Pan con arrastre + zoom con rueda
+  const canvas = document.getElementById('fh-canvas');
+  const panlayer = document.getElementById('fh-pan');
   let scale = 0.95, offX = 20, offY = 20;
   function apply(){ canvas.style.transform = `scale(${scale}) translate(${offX}px, ${offY}px)`; }
 
