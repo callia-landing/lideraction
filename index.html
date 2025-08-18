@@ -232,6 +232,72 @@
 }
 
 
+
+        /* ===== Celdran – Canvas estilo Miro ===== */
+.cd-overlay{
+  position:fixed; inset:0; display:none; z-index:9999;
+  background:rgba(6,8,20,.75); backdrop-filter: blur(2px);
+}
+.cd-overlay.is-open{ display:block; }
+
+.cd-modal{ position:relative; width:100%; height:100%; padding:2rem; }
+.cd-close{
+  position:absolute; top:16px; right:20px; z-index:2;
+  width:42px; height:42px; border-radius:50%; border:1px solid #ffffff33;
+  background:#0e1030; color:#fff; font-size:24px; line-height:42px; cursor:pointer;
+}
+
+.cd-board{
+  width:100%; height:100%; border:1px dashed #3a3e78; border-radius:18px;
+  background: radial-gradient(ellipse at top, #121434, #0d0f1f 60%);
+  overflow:hidden; position:relative;
+}
+
+/* Canvas con grid */
+.cd-canvas{
+  position:relative; width:2000px; height:1200px; transform-origin:0 0; transition:transform .15s ease-out;
+  background-image:
+    linear-gradient(transparent 31px, #ffffff12 32px),
+    linear-gradient(90deg, transparent 31px, #ffffff12 32px);
+  background-size:32px 32px;
+}
+.cd-panlayer{ position:absolute; inset:0; cursor:grab; }
+.cd-panlayer:active{ cursor:grabbing; }
+
+/* Notas */
+.cd-note{
+  position:absolute; min-width:150px; max-width:240px; padding:14px 16px;
+  border-radius:12px; box-shadow:0 10px 24px rgba(0,0,0,.35);
+  font-weight:800; letter-spacing:.2px; color:#0b0b16;
+}
+.cd-note.cd-wide{ max-width:320px; }
+.cd-big{ font-size:22px; display:block; margin-top:.2rem; }
+
+.cd-yellow{ background:#ffe680; }
+.cd-green { background:#63e6a5; }
+.cd-teal  { background:#7ad9ff; }
+.cd-pink  { background:#ff8bd4; }
+
+.cd-label{
+  position:absolute; font-size:32px; color:#ffffff; font-weight:900;
+  text-shadow:0 3px 10px rgba(0,0,0,.45);
+}
+
+/* Imagen/creatividad */
+.cd-photo{
+  position:absolute; width:220px; height:auto; border-radius:12px; overflow:hidden;
+  box-shadow:0 10px 24px rgba(0,0,0,.35);
+}
+.cd-photo img{ width:100%; height:auto; display:block; }
+
+/* Conectores */
+.cd-lines{ position:absolute; inset:0; pointer-events:none; }
+.cd-lines path{ stroke:#6a8bff; stroke-opacity:.85; stroke-width:2; fill:none; }
+
+@media (max-width: 900px){
+  .cd-note{ transform:none; }
+}
+
         
     </style>
 </head>
@@ -390,6 +456,93 @@
     </div>
   </div>
 </section>
+
+<!-- CELDRAN – Canvas estilo Miro -->
+<section id="celdran-miro" class="cd-overlay" aria-hidden="true">
+  <div class="cd-modal" role="dialog" aria-label="Celdran Abogados - Caso">
+    <button class="cd-close" aria-label="Cerrar">×</button>
+
+    <div class="cd-board">
+      <div class="cd-canvas" id="cd-canvas" style="transform: scale(0.95) translate(20px, 20px);">
+        <div class="cd-panlayer" id="cd-pan" title="Arrastra para moverte"></div>
+
+        <!-- Etiquetas de período -->
+        <div class="cd-label" style="left:240px; top:60px;">Septiembre 2024</div>
+        <div class="cd-label" style="left:240px; top:620px;">Enero 2025</div>
+
+        <!-- Bloques Septiembre 2024 -->
+        <div class="cd-note cd-yellow" style="left:260px; top:140px;">Ads</div>
+        <div class="cd-photo" style="left:200px; top:220px;">
+          <img src="https://i.postimg.cc/yYdhvYtM/Vehiculo-4.png" alt="Anuncio Celdran">
+        </div>
+        <div class="cd-note cd-yellow" style="left:460px; top:230px;">Celdran Abogados</div>
+        <div class="cd-note cd-yellow" style="left:460px; top:340px;">Complemento de Jubilación</div>
+        <div class="cd-note cd-yellow" style="left:580px; top:440px;">Implementación Monday</div>
+        <div class="cd-note cd-teal"   style="left:720px; top:160px;">Emailing</div>
+
+        <div class="cd-note cd-teal"   style="left:920px; top:160px;">Whatsapp 1</div>
+        <div class="cd-note cd-teal"   style="left:1080px; top:160px;">Whatsapp 2</div>
+        <div class="cd-note cd-yellow" style="left:720px; top:300px;">Whatsapp Automático</div>
+
+        <div class="cd-note cd-green cd-wide" style="left:1300px; top:120px;">
+          Número de Leads Anual<br><span class="cd-big">1000 Leads</span>
+        </div>
+        <div class="cd-note cd-green cd-wide" style="left:1300px; top:260px;">
+          Resultados 84.000€<br><small>84 Clientes × 1.000€ de Ticket</small>
+        </div>
+
+        <!-- Bloques Enero 2025 -->
+        <div class="cd-note cd-pink"   style="left:240px; top:700px;">Ads</div>
+
+        <div class="cd-note cd-yellow" style="left:420px; top:700px;">Complemento de Jubilación</div>
+        <div class="cd-note cd-teal"   style="left:620px; top:700px;">Emailing</div>
+
+        <div class="cd-note cd-yellow" style="left:420px; top:800px;">Brecha de Género</div>
+        <div class="cd-note cd-teal"   style="left:620px; top:800px;">Emailing</div>
+
+        <div class="cd-note cd-yellow" style="left:420px; top:900px;">IRPH</div>
+        <div class="cd-note cd-teal"   style="left:620px; top:900px;">Emailing</div>
+
+        <div class="cd-note cd-yellow" style="left:420px; top:1000px;">Renta</div>
+        <div class="cd-note cd-teal"   style="left:620px; top:1000px;">Emailing</div>
+
+        <div class="cd-note cd-green cd-wide" style="left:980px; top:840px;">
+          Inversión Actual Mensual en Anuncios<br><span class="cd-big">1.500€</span>
+        </div>
+
+        <!-- Conectores -->
+        <svg class="cd-lines" viewBox="0 0 2000 1200" preserveAspectRatio="none" aria-hidden="true">
+          <!-- Ads -> septiembre elementos -->
+          <path d="M 300 170 C 420 170 520 200 720 200" />
+          <path d="M 300 170 C 460 220 520 260 580 260" />
+          <path d="M 300 170 C 420 220 500 340 580 360" />
+          <path d="M 300 170 C 520 260 620 380 700 420" />
+
+          <!-- Whatsapps/Emailing -> Leads y resultados -->
+          <path d="M 760 200 C 980 180 1160 180 1300 200" />
+          <path d="M 960 200 C 1100 200 1220 220 1300 240" />
+          <path d="M 1120 200 C 1220 220 1260 260 1300 300" />
+
+          <!-- Enero: Ads -> verticales -->
+          <path d="M 280 720 C 360 720 380 720 420 720" />
+          <path d="M 280 720 C 360 820 380 820 420 820" />
+          <path d="M 280 720 C 360 920 380 920 420 920" />
+          <path d="M 280 720 C 360 1020 380 1020 420 1020" />
+
+          <!-- Enero: cada vertical -> emailing -->
+          <path d="M 520 720 C 560 720 580 720 620 720" />
+          <path d="M 520 820 C 560 820 580 820 620 820" />
+          <path d="M 520 920 C 560 920 580 920 620 920" />
+          <path d="M 520 1020 C 560 1020 580 1020 620 1020" />
+
+          <!-- Enero hub -> inversión -->
+          <path d="M 620 870 C 760 870 860 880 980 880" />
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 
     
@@ -774,6 +927,66 @@
   window.addEventListener('touchend', up);
 
   // Zoom con rueda
+  overlay?.addEventListener('wheel', (e)=>{
+    if(!overlay.classList.contains('is-open')) return;
+    e.preventDefault();
+    const delta = Math.sign(e.deltaY);
+    scale = Math.min(2, Math.max(0.6, scale - delta*0.05));
+    apply();
+  }, {passive:false});
+
+  apply();
+})();
+
+
+(function(){
+  // --- Abrir al hacer clic en la 2ª .prenda del carrusel
+  function getSecondPrenda(){
+    const cards = document.querySelectorAll('.sliderprendas .prenda');
+    return cards[1] || null; // segunda tarjeta
+  }
+
+  const overlay = document.getElementById('celdran-miro');
+  const closeBtn = overlay?.querySelector('.cd-close');
+
+  function openOverlay(){ overlay?.classList.add('is-open'); }
+  function closeOverlay(){ overlay?.classList.remove('is-open'); }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const card = getSecondPrenda();
+    if(card){
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', openOverlay);
+    }
+  });
+
+  closeBtn?.addEventListener('click', closeOverlay);
+  overlay?.addEventListener('click', (e)=>{ if(e.target === overlay) closeOverlay(); });
+  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeOverlay(); });
+
+  // --- Pan con arrastre + zoom con rueda
+  const canvas = document.getElementById('cd-canvas');
+  const panlayer = document.getElementById('cd-pan');
+  let scale = 0.95, offX = 20, offY = 20;
+  function apply(){ canvas.style.transform = `scale(${scale}) translate(${offX}px, ${offY}px)`; }
+
+  let dragging=false, sx=0, sy=0;
+  function down(e){ dragging = true; sx = (e.touches? e.touches[0].clientX : e.clientX); sy = (e.touches? e.touches[0].clientY : e.clientY); }
+  function move(e){
+    if(!dragging) return;
+    const x = (e.touches? e.touches[0].clientX : e.clientX);
+    const y = (e.touches? e.touches[0].clientY : e.clientY);
+    offX += (x - sx) / scale; offY += (y - sy) / scale; sx = x; sy = y; apply();
+  }
+  function up(){ dragging=false; }
+
+  panlayer.addEventListener('mousedown', down);
+  window.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', up);
+  panlayer.addEventListener('touchstart', down, {passive:true});
+  window.addEventListener('touchmove', move, {passive:true});
+  window.addEventListener('touchend', up);
+
   overlay?.addEventListener('wheel', (e)=>{
     if(!overlay.classList.contains('is-open')) return;
     e.preventDefault();
