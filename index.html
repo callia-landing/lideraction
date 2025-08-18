@@ -531,6 +531,45 @@
 /* opcional: enfatiza <strong> como en el mockup */
 .wk-card p strong{ color:#ffffff; }
 
+
+        /* ===== ROI: solo desktop + aparece por exit-intent ===== */
+.roi{ display:none; }                         /* oculta por defecto */
+@media (min-width:1025px){
+  .roi.is-open{ display:block; }             /* se muestra al activar exit-intent */
+}
+@media (max-width:1024px){
+  .roi{ display:none !important; }           /* nunca en móvil/tablet */
+}
+
+/* Gate (Nombre/Teléfono) antes de resultados */
+.roi-gate{
+  position: fixed; inset: 0; z-index: 10000;
+  display: none; align-items: center; justify-content: center;
+  background: rgba(6,8,20,.65); backdrop-filter: blur(3px);
+}
+.roi-gate.is-open{ display:flex; }
+.roi-gate__card{
+  width: min(520px, 92vw);
+  background:#111433; border:1px solid #ffffff2a; border-radius:16px;
+  box-shadow:0 18px 48px rgba(0,0,0,.45);
+  padding: 1.25rem 1.25rem 1rem;
+  color:#fff;
+}
+.roi-gate__card h3{ font-size:1.35rem; margin-bottom:.25rem; }
+.roi-gate__card p{ opacity:.9; margin-bottom:1rem; }
+
+.roi-gate__row{ display:grid; gap:.35rem; margin:.5rem 0; }
+.roi-gate__row input{
+  background:#141433; color:#fff; border:1px solid #ffffff22;
+  padding:.8rem 1rem; border-radius:12px; outline:none;
+}
+.roi-gate__actions{ display:flex; gap:.6rem; justify-content:flex-end; margin-top:1rem; }
+.roi-btn{
+  border:0; border-radius:999px; cursor:pointer; font-weight:800; padding:.8rem 1.2rem;
+}
+.roi-btn--ghost{ background:#ffffff15; border:1px solid #ffffff25; color:#fff; }
+.roi-btn--primary{ background:linear-gradient(135deg,#6a11cb,#2575fc); color:#fff; }
+
         
     </style>
 </head>
@@ -977,6 +1016,31 @@
 
     <!-- ===== ROI CALCULATOR ===== -->
     <section class="roi" id="roi">
+        <!-- Gate de Nombre/Teléfono (se muestra antes de resultados) -->
+<div class="roi-gate" id="roi-gate" aria-hidden="true">
+  <form class="roi-gate__card" id="roi-gate-form" novalidate>
+    <h3>Antes de calcular tu ROI</h3>
+    <p>Déjanos tu nombre y teléfono para enviarte las estimaciones y seguimiento.</p>
+
+    <div class="roi-gate__row">
+      <label for="roi-gate-nombre">Nombre</label>
+      <input id="roi-gate-nombre" type="text" placeholder="Nombre y apellidos" required>
+    </div>
+
+    <div class="roi-gate__row">
+      <label for="roi-gate-telefono">Teléfono</label>
+      <input id="roi-gate-telefono" type="tel" inputmode="tel"
+             placeholder="Ej: +34 612 345 678"
+             pattern="^\+?[0-9\s\-()]{7,}$" required>
+    </div>
+
+    <div class="roi-gate__actions">
+      <button type="button" class="roi-btn roi-btn--ghost" id="roi-gate-cancel">Cancelar</button>
+      <button type="submit" class="roi-btn roi-btn--primary">Ver resultados</button>
+    </div>
+  </form>
+</div>
+
         <div class="roi__inner">
             <h1>Calcula tu Retorno de la Inversión</h1>
             <h2>Según tu sector y negocio</h2>
@@ -1247,96 +1311,165 @@
             // Inicia en el paso 1
             showStep("step-1");
 
-            // ===== ROI Calculator =====
-            const roiForm = document.getElementById('roi-form');
-            const roiLoader = document.getElementById('roi-loader');
-            const roiResult = document.getElementById('roi-result');
-            const slider = document.getElementById('roi-inversion');
-            const labelInv = document.getElementById('roi-inversion-label');
-            const cInversion = document.getElementById('roi-cell-inversion');
-            const cLeads = document.getElementById('roi-cell-leads');
-            const cCpl = document.getElementById('roi-cell-cpl');
-            const cCtr = document.getElementById('roi-cell-ctr');
-            const cTicket = document.getElementById('roi-cell-ticket');
-            const cRev = document.getElementById('roi-cell-rev');
+         /* ===== ROI: exit-intent + gate nombre/teléfono + cálculo ===== */
+(function(){
+  const roiSection = document.getElementById('roi');
+  if(!roiSection) return;
 
-            const SECTOR_CONFIG = {
-                'inmobiliaria': { cpl: 7, conv: [0.01, 0.10], factor: 1.9 },
-            };
-            const DEFAULT_CONFIG = { cpl: 12, conv: [0.02, 0.08], factor: 1.8 };
-            let CURRENT = { cfg: DEFAULT_CONFIG, ticket: 0 };
+  // --- Mostrar ROI solo en escritorio cuando hay "exit-intent"
+  const isDesktop = () => window.matchMedia('(min-width:1025px)').matches && matchMedia('(pointer:fine)').matches;
 
-            function parseMoney(val){
-                if(!val) return 0;
-                const num = (val+'').replace(/[^0-9.,]/g,'').replace(/,([0-9]{2})$/,'.$1').replace(/,/g,'');
-                const n = parseFloat(num);
-                return isNaN(n) ? 0 : n;
-            }
-            function fmtEUR(n){ return Number(n).toLocaleString('es-ES', { style:'currency', currency:'EUR', maximumFractionDigits:0 }); }
-            function fmtPct(n){ return (n*100).toFixed(0) + '%'; }
+  function onExitIntent(e){
+    if (!isDesktop()) return;
+    if (sessionStorage.getItem('roiShown') === '1') return;
+    // Cursor saliendo por la parte superior (hacia la "X")
+    if (e.clientY <= 0){
+      roiSection.classList.add('is-open');
+      roiSection.scrollIntoView({behavior:'smooth', block:'center'});
+      sessionStorage.setItem('roiShown','1');
+      document.removeEventListener('mouseout', onExitIntent);
+    }
+  }
+  document.addEventListener('mouseout', onExitIntent);
 
-            function refresh(inv){
-                const cfg = CURRENT.cfg;
-                const cpl = cfg.cpl;
-                const factor = cfg.factor;
-                const leadsLow = Math.max(0, Math.floor(inv / (cpl*factor)));
-                const leadsHigh = Math.max(0, Math.floor(inv / cpl));
-                const ctrLow = cfg.conv[0], ctrHigh = cfg.conv[1];
-                const ticket = CURRENT.ticket;
+  // --- Elementos ROI
+  const roiForm   = document.getElementById('roi-form');
+  const roiLoader = document.getElementById('roi-loader');
+  const roiResult = document.getElementById('roi-result');
+  const slider    = document.getElementById('roi-inversion');
+  const labelInv  = document.getElementById('roi-inversion-label');
+  const cInversion= document.getElementById('roi-cell-inversion');
+  const cLeads    = document.getElementById('roi-cell-leads');
+  const cCpl      = document.getElementById('roi-cell-cpl');
+  const cCtr      = document.getElementById('roi-cell-ctr');
+  const cTicket   = document.getElementById('roi-cell-ticket');
+  const cRev      = document.getElementById('roi-cell-rev');
 
-                const invText = fmtEUR(inv);
-                labelInv.textContent = invText;
-                cInversion.textContent = invText;
-                cCpl.textContent = fmtEUR(cpl);
-                cCtr.textContent = `${fmtPct(ctrLow)} – ${fmtPct(ctrHigh)}`;
-                cTicket.textContent = ticket ? fmtEUR(ticket) : '-';
+  // --- Gate
+  const gate          = document.getElementById('roi-gate');
+  const gateForm      = document.getElementById('roi-gate-form');
+  const gateCancelBtn = document.getElementById('roi-gate-cancel');
+  const gateNombre    = document.getElementById('roi-gate-nombre');
+  const gateTelefono  = document.getElementById('roi-gate-telefono');
 
-                if(inv <= 0){ cLeads.textContent = '0'; cRev.textContent = ticket ? '0' : '-'; return; }
-                cLeads.textContent = `${leadsLow} – ${leadsHigh} Leads`;
+  // --- Config
+  const SECTOR_CONFIG = { 'inmobiliaria': { cpl: 7,  conv: [0.01, 0.10], factor: 1.9 } };
+  const DEFAULT_CONFIG= {                   cpl: 12, conv: [0.02, 0.08], factor: 1.8 };
 
-                if(ticket){
-                    const revenueLow = leadsLow * ctrLow * ticket;
-                    const revenueHigh = leadsHigh * ctrHigh * ticket;
-                    cRev.textContent = `${fmtEUR(revenueLow)} – ${fmtEUR(revenueHigh)}`;
-                } else {
-                    cRev.textContent = '-';
-                }
-            }
+  let CURRENT = { cfg: DEFAULT_CONFIG, ticket: 0 };
+  let pendingArgs = null; // sector, servicio, ticket
 
-            if(roiForm){
-                roiForm.addEventListener('submit', (e)=>{
-                    e.preventDefault();
-                    const sector = document.getElementById('roi-sector').value.trim().toLowerCase();
-                    const servicio = document.getElementById('roi-servicio').value.trim();
-                    const ticketStr = document.getElementById('roi-ticket').value.trim();
-                    const ticket = parseMoney(ticketStr);
+  function parseMoney(val){
+    if(!val) return 0;
+    const num = (val+'').replace(/[^0-9.,]/g,'').replace(/,([0-9]{2})$/,'.$1').replace(/,/g,'');
+    const n = parseFloat(num);
+    return isNaN(n) ? 0 : n;
+  }
+  function fmtEUR(n){ return Number(n).toLocaleString('es-ES',{style:'currency',currency:'EUR',maximumFractionDigits:0}); }
+  function fmtPct(n){ return (n*100).toFixed(0)+'%'; }
 
-                    CURRENT.cfg = SECTOR_CONFIG[sector] || DEFAULT_CONFIG;
-                    CURRENT.ticket = ticket;
+  function refresh(inv){
+    const cfg = CURRENT.cfg;
+    const cpl = cfg.cpl;
+    const factor = cfg.factor;
+    const leadsLow  = Math.max(0, Math.floor(inv / (cpl*factor)));
+    const leadsHigh = Math.max(0, Math.floor(inv / cpl));
+    const [ctrLow, ctrHigh] = cfg.conv;
+    const ticket = CURRENT.ticket;
 
-                    // Prefill con inversión 0
-                    refresh(0);
+    const invText = fmtEUR(inv);
+    labelInv.textContent = invText;
+    cInversion.textContent = invText;
+    cCpl.textContent = fmtEUR(cpl);
+    cCtr.textContent = `${fmtPct(ctrLow)} – ${fmtPct(ctrHigh)}`;
+    cTicket.textContent = ticket ? fmtEUR(ticket) : '-';
 
-                    // Loader → resultados
-                    roiLoader.classList.add('active');
-                    roiResult.classList.add('hidden');
-                    setTimeout(() => {
-                        roiLoader.classList.remove('active');
-                        roiResult.classList.remove('hidden');
-                    }, 1200);
-                });
+    if(inv <= 0){ cLeads.textContent = '0'; cRev.textContent = ticket ? '0' : '-'; return; }
+    cLeads.textContent = `${leadsLow} – ${leadsHigh} Leads`;
 
-                // Actualiza resultados al mover el rango
-                slider.addEventListener('input', (e) => {
-                    const inv = parseInt(e.target.value, 10) || 0;
-                    refresh(inv);
-                });
+    if(ticket){
+      const revenueLow  = leadsLow  * ctrLow  * ticket;
+      const revenueHigh = leadsHigh * ctrHigh * ticket;
+      cRev.textContent = `${fmtEUR(revenueLow)} – ${fmtEUR(revenueHigh)}`;
+    } else {
+      cRev.textContent = '-';
+    }
+  }
 
-                // Estado inicial
-                refresh(parseInt(slider.value, 10) || 0);
-            }
-        });
+  function startCalculation(sector, servicio, ticket){
+    CURRENT.cfg = SECTOR_CONFIG[sector] || DEFAULT_CONFIG;
+    CURRENT.ticket = ticket;
+    refresh(0);
 
+    roiLoader.classList.add('active');
+    roiResult.classList.add('hidden');
+    setTimeout(()=>{
+      roiLoader.classList.remove('active');
+      roiResult.classList.remove('hidden');
+    }, 1200);
+  }
+
+  // --- Submit del formulario principal (pide gate si aún no está validado)
+  if(roiForm){
+    roiForm.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const sector   = document.getElementById('roi-sector').value.trim().toLowerCase();
+      const servicio = document.getElementById('roi-servicio').value.trim();
+      const ticket   = parseMoney(document.getElementById('roi-ticket').value.trim());
+
+      pendingArgs = [sector, servicio, ticket];
+
+      if (sessionStorage.getItem('roiLeadOK') === '1'){
+        // ya tenemos nombre/teléfono esta sesión
+        startCalculation(sector, servicio, ticket);
+      } else {
+        // pedimos datos antes de mostrar resultados
+        gate.classList.add('is-open');
+        gate.setAttribute('aria-hidden','false');
+        (gateNombre.value ? gateTelefono : gateNombre).focus();
+      }
+    });
+  }
+
+  // --- Gate: cancelar
+  gateCancelBtn?.addEventListener('click', ()=>{
+    gate.classList.remove('is-open');
+    gate.setAttribute('aria-hidden','true');
+  });
+
+  // --- Gate: validar y continuar
+  gateForm?.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const nombre  = gateNombre.value.trim();
+    const telefono= gateTelefono.value.trim();
+    const telOk   = /^\+?[0-9\s\-()]{7,}$/.test(telefono);
+
+    if(!nombre || !telOk){
+      alert('Por favor, indica un nombre y un teléfono válido.');
+      return;
+    }
+
+    // Aquí podrías enviar el lead si quieres:
+    // fetch('/api/roi-lead', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({nombre, telefono})})
+
+    sessionStorage.setItem('roiLeadOK','1');
+    gate.classList.remove('is-open');
+    gate.setAttribute('aria-hidden','true');
+
+    if (pendingArgs){
+      startCalculation(...pendingArgs);
+    }
+  });
+
+  // Slider recalcula en vivo
+  slider?.addEventListener('input', (e)=>{
+    const inv = parseInt(e.target.value, 10) || 0;
+    refresh(inv);
+  });
+
+  // Estado inicial del slider (aunque el ROI se muestre más tarde)
+  refresh(parseInt(slider?.value || '0', 10));
+})();
 
 
 
